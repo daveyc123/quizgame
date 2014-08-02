@@ -5,7 +5,7 @@ QQuizTimeCounter::QQuizTimeCounter()
 {
 
     timer = new QTimer(this);
-    timer->setInterval(200);
+    timer->setInterval(27);
     connect(timer, SIGNAL(timeout()), this, SLOT(sendUpdate()));
 }
 
