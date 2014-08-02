@@ -5,7 +5,8 @@ QT += qml quick widgets
 SOURCES += main.cpp \
     qquiztimecounter.cpp \
     qquizquestions.cpp \
-    quizquestion.cpp
+    quizquestion.cpp \
+    qquizuicontroller.cpp
 
 RESOURCES += qml.qrc
 
@@ -18,7 +19,8 @@ include(deployment.pri)
 HEADERS += \
     qquiztimecounter.h \
     qquizquestions.h \
-    quizquestion.h
+    quizquestion.h \
+    qquizuicontroller.h
 
 OTHER_FILES += \
     questions.json
