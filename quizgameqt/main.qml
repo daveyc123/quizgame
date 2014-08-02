@@ -25,4 +25,9 @@ ApplicationWindow {
         Question {}
     }
 
+    Connections {
+        target: controller
+        onPageChanged: stackView.push(controller.page)
+    }
+
 }

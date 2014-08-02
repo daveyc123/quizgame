@@ -5,6 +5,7 @@
 #include <qquizquestions.h>
 #include <QCommandLineParser>
 #include <QtDebug>
+#include <qquizuicontroller.h>
 
 int main(int argc, char *argv[])
 {
@@ -27,9 +28,12 @@ int main(int argc, char *argv[])
 
     QQuizTimeCounter quizTimeCounter;
     QQuizQuestions quizQuestions(questionsFile);
+    QQuizUIController quizUIController;
 
     engine.rootContext()->setContextProperty("quizTimeCounter", &quizTimeCounter);
     engine.rootContext()->setContextProperty("quizQuestions", &quizQuestions);
+    engine.rootContext()->setContextProperty("controller", &quizUIController);
+
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 
     return app.exec();
