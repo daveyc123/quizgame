@@ -1,25 +1,28 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.0
 
 ApplicationWindow {
     width: 360
     height: 360
     visible: true
 
-    Text {
-        anchors.centerIn: parent
-        text: parseInt(quizTimeCounter.elapsedTime)
+    StackView {
+        id: stackView
+        anchors.fill: parent
+        initialItem: questionPage
     }
 
-    Button {
-        text: "Reset clock"
-        onClicked: quizTimeCounter.start()
+    Component {
+        id: highScorePage
+        Item {
+            HighScores {}
+        }
     }
 
-    Button {
-        text: "Stop clock"
-        onClicked: quizTimeCounter.stop();
+    Component {
+        id: questionPage
+        Question {}
     }
+
 }
-
-
