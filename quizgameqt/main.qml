@@ -10,13 +10,14 @@ ApplicationWindow {
     StackView {
         id: stackView
         anchors.fill: parent
-        initialItem: questionPage
+        initialItem: highScorePage
     }
 
     Component {
         id: highScorePage
         Item {
             HighScores {}
+            anchors.fill: parent
         }
     }
 
@@ -27,7 +28,8 @@ ApplicationWindow {
 
     Connections {
         target: controller
-        onPageChanged: stackView.push(controller.page)
+         // don't use eval, eh? well it converts an id to an object pretty nicely. if you read this and know a better way, hit me up at david.a.cummings@gmail.com
+        onPageChanged: stackView.push(eval(controller.page))
     }
 
 }

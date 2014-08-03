@@ -19,6 +19,14 @@ void QQuizUIController::setPage(QString page) {
     emit pageChanged(page);
 }
 
+void QQuizUIController::setQuestionPage() {
+    setPage("highScorePage");
+}
+
 QString QQuizUIController::page() {
     return mPage;
+}
+
+void QQuizUIController::startNewGame() {
+    // do something logical
 }
