@@ -6,6 +6,7 @@
 #include <QCommandLineParser>
 #include <QtDebug>
 #include <qquizuicontroller.h>
+#include <QTime>
 
 int main(int argc, char *argv[])
 {
@@ -21,17 +22,19 @@ int main(int argc, char *argv[])
     parser.addOption(questionsOption);
 
     parser.process(app);
-
     QString questionsFile = parser.value(questionsOption);
 
-    QQmlApplicationEngine engine;
+    // Seed random
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
 
     QQuizTimeCounter quizTimeCounter;
     QQuizQuestions quizQuestions(questionsFile);
-    QQuizUIController quizUIController;
+    QQuizGameState quizGameState(&quizQuestions);
+    QQuizUIController quizUIController(&quizGameState);
 
+    QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("quizTimeCounter", &quizTimeCounter);
-    engine.rootContext()->setContextProperty("quizQuestions", &quizQuestions);
     engine.rootContext()->setContextProperty("controller", &quizUIController);
 
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));

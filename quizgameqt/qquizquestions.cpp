@@ -52,6 +52,32 @@ QList<QuizQuestion *> QQuizQuestions::getAllQuestions() {
 }
 
 QList<QuizQuestion *> QQuizQuestions::getRandomQuestions(int count) {
-    // TODO more to do here
-    return mQuestions;
+    QList<QuizQuestion *> results;
+
+    if (count > mQuestions.size()) {
+        count = mQuestions.size();
+    }
+
+    qDebug() << "question size: " << mQuestions.size();
+    qDebug() << "request size: " << count;
+
+    QSet<int> chosen;
+    while(chosen.size() < count) {
+        int randNumber = qrand() % mQuestions.size();
+        qDebug() << "random number chosen: " << randNumber;
+        chosen.insert(randNumber);
+    }
+
+    foreach(int i, chosen) {
+        qDebug() << "append question: " << i;
+        results.append(mQuestions.at(i));
+    }
+
+    // TODO, don't just pick the first ten questions
+//    for (int i=0; i<mQuestions.size(); i++) {
+//        results.append(mQuestions.at(i));
+//    }
+    qDebug() << results.size();
+
+    return results;
 }
