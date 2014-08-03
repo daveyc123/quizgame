@@ -4,9 +4,10 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.0
 
 Item {
+    anchors.fill: parent
+
     Rectangle {
-        width: parent.width
-        height: parent.height
+        anchors.fill: parent
         color: "#FFFFFF"
     }
 
@@ -38,17 +39,26 @@ Item {
         anchors.centerIn: parent
     }
 
-    Button {
-        text: "Reset clock"
-        onClicked: quizTimeCounter.start()
-        anchors.left: parent.left
-        anchors.bottom : parent.bottom;
-    }
+//    Button {
+//        text: "Reset clock"
+//        onClicked: quizTimeCounter.start()
+//        anchors.left: parent.left
+//        anchors.bottom : parent.bottom;
+//    }
+
+//    Button {
+//        text: "Stop clock"
+//        onClicked: quizTimeCounter.stop();
+//        anchors.right: parent.right;
+//        anchors.top : parent.bottom;
+//    }
 
     Button {
         text: "Stop clock"
-        onClicked: quizTimeCounter.stop();
-        anchors.right: parent.right;
-        anchors.top : parent.bottom;
+        onClicked: controller.setPage("highScorePage");
+        anchors.left: parent.left
+        anchors.bottom : parent.bottom
     }
+
+
 }

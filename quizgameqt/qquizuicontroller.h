@@ -12,14 +12,19 @@ class QQuizUIController : public QObject
 public:
     QQuizUIController(QObject *parent = 0);
 
+
+public slots:
     QString page();
+
+    void setPage(QString page);
+
+    void setQuestionPage();
+    void startNewGame();
 
 signals:
     void pageChanged(QString page);
 
 private:
-    void setPage(QString page);
-
     QString mPage;
 
 };
