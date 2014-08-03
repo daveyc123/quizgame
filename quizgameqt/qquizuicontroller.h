@@ -2,6 +2,7 @@
 #define QQUIZUICONTROLLER_H
 
 #include <QObject>
+#include <qquizgamestate.h>
 
 class QQuizUIController : public QObject
 {
@@ -10,8 +11,7 @@ class QQuizUIController : public QObject
     Q_PROPERTY(QString page READ page NOTIFY pageChanged)
 
 public:
-    QQuizUIController(QObject *parent = 0);
-
+    QQuizUIController(QQuizGameState *gameState, QObject *parent = 0);
 
 public slots:
     QString page();
@@ -26,6 +26,7 @@ signals:
 
 private:
     QString mPage;
+    QQuizGameState* mGameState;
 
 };
 

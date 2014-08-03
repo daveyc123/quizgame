@@ -8,9 +8,10 @@
  * @brief QQuizUIController::QQuizUIController
  * @param parent
  */
-QQuizUIController::QQuizUIController(QObject *parent) :
+QQuizUIController::QQuizUIController(QQuizGameState *gameState, QObject *parent) :
     QObject(parent)
 {
+    mGameState = gameState;
     setPage("questionPage");
 }
 
@@ -28,5 +29,5 @@ QString QQuizUIController::page() {
 }
 
 void QQuizUIController::startNewGame() {
-    // do something logical
+    mGameState->startGame();
 }
