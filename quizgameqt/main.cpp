@@ -18,11 +18,15 @@ int main(int argc, char *argv[])
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QCoreApplication::translate("main", "Amazing quiz game!."));
-    QCommandLineOption questionsOption(QStringList() << "q" << "questions", QCoreApplication::translate("main", "Specifiy a json file containing the list of questions."), QCoreApplication::translate("main", "address"));
+    QCommandLineOption questionsOption(QStringList() << "q" << "questions", QCoreApplication::translate("main", "Specifiy a json file containing the list of questions."), QCoreApplication::translate("main", "questions"));
     parser.addOption(questionsOption);
+
+    QCommandLineOption resultsOption(QStringList() << "r" << "results", QCoreApplication::translate("main", "Specifiy a json file containing the list of previous results (high scores)."), QCoreApplication::translate("main", "results"));
+    parser.addOption(resultsOption);
 
     parser.process(app);
     QString questionsFile = parser.value(questionsOption);
+    QString resultsFile = parser.value(resultsOption);
 
     // Seed random
     QTime time = QTime::currentTime();
@@ -30,7 +34,8 @@ int main(int argc, char *argv[])
 
     QQuizTimeCounter quizTimeCounter;
     QQuizQuestions quizQuestions(questionsFile);
-    QQuizGameState quizGameState(&quizQuestions);
+    QQuizResults quizResults(resultsFile);
+    QQuizGameState quizGameState(&quizQuestions, &quizResults);
     QQuizUIController quizUIController(&quizGameState);
 
     QQmlApplicationEngine engine;

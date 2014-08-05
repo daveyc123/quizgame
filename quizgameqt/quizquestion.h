@@ -6,6 +6,7 @@
 class QuizQuestion : public QObject
 {
     Q_OBJECT
+
 public:
     QuizQuestion(QString text, QString answer, QObject *parent = 0);
 

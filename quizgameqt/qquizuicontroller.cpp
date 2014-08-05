@@ -1,5 +1,6 @@
 #include "qquizuicontroller.h"
 
+
 /**
  * UI controller to manage the interactions between the model (C++)
  * and the UI (qml). UI should listen to signals emitted by the control
@@ -28,6 +29,6 @@ QString QQuizUIController::page() {
     return mPage;
 }
 
-void QQuizUIController::startNewGame() {
-    mGameState->startGame();
+void QQuizUIController::startNewGame(QString playerName) {
+    mGameState->startGame(playerName);
 }

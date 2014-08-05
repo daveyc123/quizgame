@@ -7,7 +7,9 @@ SOURCES += main.cpp \
     qquizquestions.cpp \
     quizquestion.cpp \
     qquizuicontroller.cpp \
-    qquizgamestate.cpp
+    qquizgamestate.cpp \
+    qquizresult.cpp \
+    qquizresults.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,7 +24,9 @@ HEADERS += \
     qquizquestions.h \
     quizquestion.h \
     qquizuicontroller.h \
-    qquizgamestate.h
+    qquizgamestate.h \
+    qquizresult.h \
+    qquizresults.h
 
 OTHER_FILES += \
     questions.json
