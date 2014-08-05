@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <qquizgamestate.h>
+#include <QString>
 
 class QQuizUIController : public QObject
 {
@@ -19,7 +20,7 @@ public slots:
     void setPage(QString page);
 
     void setQuestionPage();
-    void startNewGame();
+    void startNewGame(QString playerName);
 
 signals:
     void pageChanged(QString page);
