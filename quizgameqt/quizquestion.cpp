@@ -7,10 +7,10 @@ QuizQuestion::QuizQuestion(QString text, QString answer, QObject *parent) :
     mAnswer = answer;
 }
 
-QString QuizQuestion::getText() {
+QString QuizQuestion::text() {
     return mText;
 }
 
-QString QuizQuestion::getAnswer() {
+QString QuizQuestion::answer() {
     return mAnswer;
 }

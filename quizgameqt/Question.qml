@@ -13,7 +13,7 @@ Item {
 
     Text {
         id: questionCount
-        text: qsTr("Question 1")
+        text: qsTr("Question ") + controller.questionCount
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.leftMargin: 5
@@ -32,11 +32,29 @@ Item {
 
     Text {
         id: questionText
-        text: qsTr("Have ever had the feeling there's a zamp in the lamp?")
+        text: controller.questionText
         wrapMode: Text.WordWrap
         width: parent.width * 0.9
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
+    }
+
+    Button {
+        text: "Anne"
+        onClicked: controller.annePressed();
+        anchors.bottom : parent.bottom
+        anchors.left: parent.left
+        anchors.bottomMargin: 20
+        anchors.leftMargin: 20
+    }
+
+    Button {
+        text: "Shawn"
+        onClicked: controller.shawnPressed();
+        anchors.right: parent.right;
+        anchors.bottom : parent.bottom;
+        anchors.bottomMargin: 20
+        anchors.rightMargin: 20
     }
 
 //    Button {
@@ -53,12 +71,12 @@ Item {
 //        anchors.top : parent.bottom;
 //    }
 
-    Button {
-        text: "Stop clock"
-        onClicked: controller.setPage("highScorePage");
-        anchors.left: parent.left
-        anchors.bottom : parent.bottom
-    }
+//    Button {
+//        text: "Stop clock"
+//        onClicked: controller.setPage("highScorePage");
+//        anchors.left: parent.left
+//        anchors.bottom : parent.bottom
+//    }
 
 
 }
