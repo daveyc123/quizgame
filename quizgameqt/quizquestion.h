@@ -11,8 +11,8 @@ public:
     QuizQuestion(QString text, QString answer, QObject *parent = 0);
 
 public:
-    QString getText();
-    QString getAnswer();
+    QString text();
+    QString answer();
 
 private:
     QString mText;

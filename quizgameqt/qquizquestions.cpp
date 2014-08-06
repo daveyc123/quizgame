@@ -39,8 +39,8 @@ QQuizQuestions::QQuizQuestions(QString questionsFile, QObject *parent) :
         }
 
         foreach(QuizQuestion* q, mQuestions) {
-            qDebug() << q->getText();
-            qDebug() << q->getAnswer();
+            qDebug() << q->text();
+            qDebug() << q->answer();
         }
 
         loadFile.close();

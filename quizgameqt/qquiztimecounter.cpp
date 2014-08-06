@@ -3,7 +3,6 @@
 
 QQuizTimeCounter::QQuizTimeCounter()
 {
-
     timer = new QTimer(this);
     timer->setInterval(27);
     connect(timer, SIGNAL(timeout()), this, SLOT(sendUpdate()));
@@ -11,7 +10,6 @@ QQuizTimeCounter::QQuizTimeCounter()
 
 long QQuizTimeCounter::getTimeMs()
 {
-    // Return current system time (used to calculate the speed).
     QDateTime time = QDateTime::currentDateTime();
     return time.toMSecsSinceEpoch();
 }

@@ -15,13 +15,14 @@ void QQuizGameState::startGame(QString playerName) {
     mInGame = true;
 
     emit gameStarted();
+    emit newQuestion(mCurrentQuestions.at(mCurrentQuestionIndex), mCurrentQuestionIndex + 1);
 }
 
 bool QQuizGameState::answerCurrentQuestion(QString answer) {
     bool result = true;
 
     QuizQuestion* currentQuestion = mCurrentQuestions.at(mCurrentQuestionIndex);
-    if (QString::compare(currentQuestion->getAnswer(), answer) == 0) {
+    if (QString::compare(currentQuestion->answer(), answer) == 0) {
         // add the delay to the timer
         result = false;
     }
@@ -31,7 +32,7 @@ bool QQuizGameState::answerCurrentQuestion(QString answer) {
     if (mCurrentQuestionIndex == QUESTIONS_PER_GAME) {
         finishGame();
     } else {
-        emit newQuestion(mCurrentQuestions.at(mCurrentQuestionIndex));
+        emit newQuestion(mCurrentQuestions.at(mCurrentQuestionIndex), mCurrentQuestionIndex + 1);
     }
 
     return result;

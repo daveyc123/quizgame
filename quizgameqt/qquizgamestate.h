@@ -16,7 +16,7 @@ public:
 signals:
     void gameStarted();
     void gameFinished();
-    void newQuestion(QuizQuestion* question);
+    void newQuestion(QuizQuestion* question, int questionCount);
 
 public slots:
     void startGame(QString playerName);
