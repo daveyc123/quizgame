@@ -27,7 +27,7 @@ bool QQuizGameState::answerCurrentQuestion(QString answer) {
     bool result = true;
 
     QuizQuestion* currentQuestion = mCurrentQuestions.at(mCurrentQuestionIndex);
-    if (QString::compare(currentQuestion->answer(), answer) == 0) {
+    if (QString::compare(currentQuestion->answer(), answer) != 0) {
         mQuizTimeCounter->addElapsedTime(TIME_PENALTY);
         result = false;
     }
