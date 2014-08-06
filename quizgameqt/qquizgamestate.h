@@ -4,6 +4,7 @@
 #include <QObject>
 #include <qquizquestions.h>
 #include <qquizresults.h>
+#include <qquiztimecounter.h>
 
 #define QUESTIONS_PER_GAME 10
 
@@ -21,12 +22,14 @@ signals:
 public slots:
     void startGame(QString playerName);
     bool answerCurrentQuestion(QString answer);
+    QQuizTimeCounter* timeCounter();
 
 private:
     void finishGame();
 
     QQuizQuestions* mGameQuestions;
     QQuizResults* mResults;
+    QQuizTimeCounter* mQuizTimeCounter;
 
     QList<QuizQuestion* > mCurrentQuestions;
     int mCurrentQuestionIndex;

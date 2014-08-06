@@ -4,7 +4,7 @@
 QQuizTimeCounter::QQuizTimeCounter()
 {
     timer = new QTimer(this);
-    timer->setInterval(27);
+    timer->setInterval(103);
     connect(timer, SIGNAL(timeout()), this, SLOT(sendUpdate()));
 }
 
@@ -33,4 +33,8 @@ long QQuizTimeCounter::elapsedTime() {
 
 void QQuizTimeCounter::sendUpdate() {
     emit updated(elapsedTime());
+}
+
+void QQuizTimeCounter::addElapsedTime(long time) {
+    mStartTime -= time;
 }

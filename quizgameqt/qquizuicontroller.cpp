@@ -20,6 +20,7 @@ QQuizUIController::QQuizUIController(QQuizGameState *gameState, QObject *parent)
     QObject::connect(gameState, &QQuizGameState::gameStarted, this, &QQuizUIController::onGameStarted);
     QObject::connect(gameState, &QQuizGameState::newQuestion, this, &QQuizUIController::onNewQuestion);
     QObject::connect(gameState, &QQuizGameState::gameFinished, this, &QQuizUIController::onGameFinished);
+    QObject::connect(gameState->timeCounter(), &QQuizTimeCounter::updated, this, &QQuizUIController::onTimerFired);
 }
 
 void QQuizUIController::setPage(QString page) {
@@ -43,6 +44,11 @@ void QQuizUIController::onGameFinished() {
     setPage(PAGE_HIGH_SCORE);
 }
 
+void QQuizUIController::onTimerFired(long time) {
+    mTimerText = QString::number(time);
+    emit newTimerText(mTimerText);
+}
+
 void QQuizUIController::annePressed() {
     mGameState->answerCurrentQuestion("Anne");
 }
@@ -64,4 +70,8 @@ QString QQuizUIController::questionText() {
 
 QString QQuizUIController::questionCount() {
     return QString::number(mCurrentQuestionCount);
+}
+
+QString QQuizUIController::timerText() {
+    return mTimerText;
 }
