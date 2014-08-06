@@ -36,5 +36,5 @@ void QQuizTimeCounter::sendUpdate() {
 }
 
 void QQuizTimeCounter::addElapsedTime(long time) {
-    mStartTime -= time;
+    mStartTime = mStartTime - time;
 }
