@@ -265,19 +265,24 @@ public:
     InitCache();
   }
 
-  void DisplayBitmap(unsigned char val) {
+  void DisplayBitmap(RenderedChar* rchar, FT_Int pen_x, FT_Int pen_y) {
     FT_Int i, j, p, q;
-    RenderedChar* rchar = &char_cache_[val];
-    FT_Int x = rchar->bitmap_left;
-    FT_Int y = matrix_->height() - rchar->bitmap_top;
+    FT_Int x = pen_x + rchar->bitmap_left;
+    FT_Int y = pen_y - rchar->bitmap_top;
     FT_Int x_max = x + rchar->width;
     FT_Int y_max = y + rchar->rows;
     unsigned char pixel;
 
+#ifdef DEBUG
+    printf("DEBUG: pen_x = %d, pen_y = %d, x = %d, y = %d\n", pen_x, pen_y, x, y);
+#endif
+
     for (i = x, p = 0; i < x_max; i++, p++) {
       for (j = y, q = 0; j < y_max; j++, q++) {
         if (i < 0 || j < 0 || i >= matrix_->width() || j >= matrix_->height()) {
+#ifdef DEBUG
           printf("Character chopped\n");
+#endif
           continue;
         }
 
@@ -287,20 +292,49 @@ public:
     }
   }
 
+  void DisplayString(char* text) {
+    FT_Int pen_x = 1;
+    FT_Int pen_y = matrix_->height() - 2;
+    FT_Int i, j, p, q;
+    RenderedChar* rchar;
+    FT_Int x_max;
+    FT_Int y_max;
+    unsigned char pixel;
+    char c;
+
+    if (text == NULL) {
+      return;
+    }
+
+    while (c = *text++) {
+      rchar = &char_cache_[c];
+      DisplayBitmap(rchar, pen_x, pen_y);
+      pen_x += rchar->advance_x;
+      pen_y += rchar->advance_y;
+    }
+  }
+
   void Run() {
     FT_GlyphSlot slot;
     FT_Error error;
+    RenderedChar* rchar;
     unsigned char val = '!';
 
-    slot = face_->glyph;
+    // slot = face_->glyph;
+    // while (running_) {
+    //   rchar = &char_cache_[val];
+    //   DisplayBitmap(rchar, 1, (matrix_->height() - 1));
+    //   val += 1;
+    //   if (val > '~') {
+    //     val = '!';
+    //   }
+    //   usleep(500000);
+    //   matrix_->ClearScreen();
+    // }
+
+    DisplayString("Woot!");
     while (running_) {
-      DisplayBitmap(val);
-      val += 1;
-      if (val > '~') {
-        val = '!';
-      }
-      usleep(500000);
-      matrix_->ClearScreen();
+      sleep(1);
     }
   }
 
@@ -398,14 +432,14 @@ private:
     char_cache_[val].width = bitmap->width;
     char_cache_[val].rows = bitmap->rows;
     char_cache_[val].pitch = bitmap->pitch;
-    char_cache_[val].advance_x = slot->advance.x;
-    char_cache_[val].advance_y = slot->advance.y;
+    char_cache_[val].advance_x = slot->advance.x >> 6;
+    char_cache_[val].advance_y = slot->advance.y >> 6;
     char_cache_[val].bitmap_left = slot->bitmap_left;
     char_cache_[val].bitmap_top = slot->bitmap_top;
     char_cache_[val].buf = UnpackMonoBitmap_(bitmap);
 
 #ifdef DEBUG
-    printf("Rendered %d '%c': width=%d, rows=%d, pitch=%d\n", val, val, bitmap->width, bitmap->rows, bitmap->pitch);
+    printf("DEBUG: Rendered %d '%c': width=%d, rows=%d, pitch=%d\n", val, val, bitmap->width, bitmap->rows, bitmap->pitch);
 #endif
 
   }
