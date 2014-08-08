@@ -19,6 +19,7 @@ public:
 
 private:
     void serialize();
+    void addResult(QQuizResult *, bool);
 private:
     QList<QQuizResult*> mResults;
     QString mResultsFile;

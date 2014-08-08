@@ -2,6 +2,8 @@ TEMPLATE = app
 
 QT += qml quick widgets
 
+QMAKE_CXXFLAGS += -fpermissive
+
 SOURCES += main.cpp \
     qquiztimecounter.cpp \
     qquizquestions.cpp \
@@ -9,7 +11,8 @@ SOURCES += main.cpp \
     qquizuicontroller.cpp \
     qquizgamestate.cpp \
     qquizresult.cpp \
-    qquizresults.cpp
+    qquizresults.cpp \
+    qquizbuttonthread.cpp
 
 RESOURCES += qml.qrc
 
@@ -26,7 +29,8 @@ HEADERS += \
     qquizuicontroller.h \
     qquizgamestate.h \
     qquizresult.h \
-    qquizresults.h
+    qquizresults.h \
+    qquizbuttonthread.h
 
 OTHER_FILES += \
     questions.json

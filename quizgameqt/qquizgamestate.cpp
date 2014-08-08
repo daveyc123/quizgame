@@ -16,9 +16,7 @@ void QQuizGameState::startGame(QString playerName) {
     mCurrentQuestions = mGameQuestions->getRandomQuestions(QUESTIONS_PER_GAME);
     mCurrentQuestionIndex = 0;
     mInGame = true;
-
     mQuizTimeCounter->start();
-
     emit gameStarted();
     emit newQuestion(mCurrentQuestions.at(mCurrentQuestionIndex), mCurrentQuestionIndex + 1);
 }
