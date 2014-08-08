@@ -5,6 +5,7 @@
 #include <qquizgamestate.h>
 #include <QString>
 #include <qquiztimecounter.h>
+#include <qquizbuttonthread.h>
 
 class QQuizUIController : public QObject
 {
@@ -17,6 +18,7 @@ class QQuizUIController : public QObject
 
 public:
     QQuizUIController(QQuizGameState *gameState, QObject *parent = 0);
+    ~QQuizUIController();
 
 public slots:
     QString page();
@@ -35,6 +37,7 @@ private slots:
     void onNewQuestion(QuizQuestion* question, int questionCount);
     void onGameFinished();
     void onTimerFired(long time);
+    void onButtonPressed(QString id);
 
 signals:
     void pageChanged(QString page);
@@ -48,7 +51,7 @@ private:
     QString mCurrentQuestionText;
     int mCurrentQuestionCount;
     QString mTimerText;
-
+    QQuizButtonThread* mButtonThread;
 };
 
 #endif // QQUIZUICONTROLLER_H

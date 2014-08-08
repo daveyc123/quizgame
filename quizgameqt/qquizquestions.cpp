@@ -26,8 +26,6 @@ QQuizQuestions::QQuizQuestions(QString questionsFile, QObject *parent) :
             qDebug() << "Parsed the json questions like a champ";
         }
 
-
-
         QJsonObject json = loadDoc.object();
 
         QJsonArray questionsArray = json["questions"].toArray();

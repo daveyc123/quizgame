@@ -35,14 +35,14 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
             QJsonObject resultJson = resultsArray[i].toObject();
 
             QQuizResult *result = new QQuizResult(resultJson["name"].toString(), (long)resultJson["score"].toInt()); // TODO losing some digits
-            mResults.addResult(result); // should be serialized in sort order, but in case they've been tweaked use addResult to get proper sorting
+            addResult(result, false); // should be serialized in sort order, but in case they've been tweaked use addResult to get proper sorting
         }
 
         loadFile.close();
     }
 }
 
-void QQuizResults::addResult(QQuizResult *result) {
+void QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
     if (mResults.size() == 0) {
         mResults.append(result);
     } else {
@@ -60,7 +60,13 @@ void QQuizResults::addResult(QQuizResult *result) {
         }
     }
 
-    serialize(); // save in case we crash
+    if (shouldSerialize) {
+        serialize(); // save in case we crash
+    }
+}
+
+void QQuizResults::addResult(QQuizResult *result) {
+   addResult(result, true);
 }
 
 QList<QQuizResult*> QQuizResults::getResults() {
