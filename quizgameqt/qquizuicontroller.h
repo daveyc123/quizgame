@@ -6,6 +6,7 @@
 #include <QString>
 #include <qquiztimecounter.h>
 #include <qquizbuttonthread.h>
+#include <QQmlContext>
 
 class QQuizUIController : public QObject
 {
@@ -32,6 +33,9 @@ public slots:
     void shawnPressed();
     void annePressed();
 
+public:
+    void setQmlContext(QQmlContext* context);
+
 private slots:
     void onGameStarted();
     void onNewQuestion(QuizQuestion* question, int questionCount);
@@ -52,6 +56,8 @@ private:
     int mCurrentQuestionCount;
     QString mTimerText;
     QQuizButtonThread* mButtonThread;
+    QQmlContext* mQmlContext;
+
 };
 
 #endif // QQUIZUICONTROLLER_H

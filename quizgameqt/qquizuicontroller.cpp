@@ -17,7 +17,6 @@ QQuizUIController::QQuizUIController(QQuizGameState *gameState, QObject *parent)
     QObject(parent)
 {
     mGameState = gameState;
-    setPage(PAGE_HIGH_SCORE);
 
     mButtonThread = new QQuizButtonThread();
     mButtonThread->addButton(27, "green");
@@ -37,6 +36,19 @@ QQuizUIController::~QQuizUIController() {
 
 void QQuizUIController::setPage(QString page) {
     mPage = page;
+    if (page.compare(PAGE_HIGH_SCORE) == 0) {
+        if (mQmlContext != NULL) {
+            QList<QObject*> dataList;
+            foreach(QQuizResult* r, mGameState->results()->getResults()) {
+                // If I pass in r, this doesn't seem to work (segfaults). All the examples I've seen do a copy of the data
+                // so perhaps the qml context is responsible for cleaning up the items
+                dataList.append(new QQuizResult(r->name(), r->score()));
+            }
+
+            mQmlContext->setContextProperty("resultsModel", QVariant::fromValue(dataList));
+        }
+    }
+
     emit pageChanged(page);
 }
 
@@ -94,4 +106,9 @@ void QQuizUIController::onButtonPressed(QString id) {
     } else if (id.compare(id, "red") == 0) {
         shawnPressed();
     }
+}
+
+void QQuizUIController::setQmlContext(QQmlContext *context) {
+    mQmlContext = context;
+    setPage(PAGE_HIGH_SCORE);
 }
