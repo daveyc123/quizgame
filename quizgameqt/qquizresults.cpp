@@ -35,12 +35,7 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
             QJsonObject resultJson = resultsArray[i].toObject();
 
             QQuizResult *result = new QQuizResult(resultJson["name"].toString(), (long)resultJson["score"].toInt()); // TODO losing some digits
-            mResults.append(result);
-        }
-
-        foreach(QQuizResult* r, mResults) {
-            qDebug() << r->name();
-            qDebug() << r->score();
+            mResults.addResult(result); // should be serialized in sort order, but in case they've been tweaked use addResult to get proper sorting
         }
 
         loadFile.close();
@@ -91,11 +86,11 @@ void QQuizResults::serialize() {
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qDebug() << "Couldn't open the save file for writing";
         return;
+    } else {
+        QJsonDocument saveDoc(jsonRoot);
+        saveFile.write(saveDoc.toJson());
+        saveFile.close();
     }
-
-    QJsonDocument saveDoc(jsonRoot);
-    saveFile.write(saveDoc.toJson());
-    //qDebug() << "You haven't implement this yet!";
 }
 
 void QQuizResults::clearScores() {
