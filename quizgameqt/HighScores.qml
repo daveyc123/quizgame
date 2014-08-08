@@ -76,8 +76,8 @@ Item {
         id: startGameButton
         text: qsTr("Start Game")
         onClicked: {
-            if (playerName != null) {
-                controller.startNewGame(playerName);
+            if (playerName.text != null) {
+                controller.startNewGame(playerName.text);
             }
         }
 

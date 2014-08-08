@@ -22,7 +22,7 @@ Item {
 
     Text {
         id: timer
-        text: parseInt(quizTimeCounter.elapsedTime)
+        text: controller.timerText
 
         anchors.right: parent.right
         anchors.top: parent.top

@@ -32,14 +32,12 @@ int main(int argc, char *argv[])
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 
-    QQuizTimeCounter quizTimeCounter;
     QQuizQuestions quizQuestions(questionsFile);
     QQuizResults quizResults(resultsFile);
     QQuizGameState quizGameState(&quizQuestions, &quizResults);
     QQuizUIController quizUIController(&quizGameState);
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("quizTimeCounter", &quizTimeCounter);
     engine.rootContext()->setContextProperty("controller", &quizUIController);
 
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
