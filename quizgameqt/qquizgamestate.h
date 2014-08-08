@@ -23,6 +23,7 @@ public slots:
     void startGame(QString playerName);
     bool answerCurrentQuestion(QString answer);
     QQuizTimeCounter* timeCounter();
+    QQuizResults* results();
 
 private:
     void finishGame();

@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     QQuizUIController quizUIController(&quizGameState);
 
     QQmlApplicationEngine engine;
+    quizUIController.setQmlContext(engine.rootContext());
     engine.rootContext()->setContextProperty("controller", &quizUIController);
 
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
