@@ -37,6 +37,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "qquizbuttonthread.h"
 #include <QtDebug>
 
+//#define BUILD_FOR_PI
+
+#ifdef BUILD_FOR_PI
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,7 +65,7 @@ volatile unsigned int
   *gpio;                             // GPIO register table
 const int
    debounceTime = 20;                // 20 ms for button debouncing
-
+#endif //BUILD_FOR_PI
 
 
 QQuizButtonThread::QQuizButtonThread(QObject *parent) :
@@ -86,12 +89,12 @@ void QQuizButtonThread::run() {
         qDebug() << "QQuizButtonThread gpios don't match ids";
         return;
     }
-
     runAdafruitCode();
 }
 
-void QQuizButtonThread::runAdafruitCode() {
 
+void QQuizButtonThread::runAdafruitCode() {
+#ifdef BUILD_FOR_PI
     // A few arrays here are declared with 32 elements, even though
     // values aren't needed for io[] members where the 'key' value is
     // GND.  This simplifies the code a bit -- no need for mallocs and
@@ -230,10 +233,12 @@ void QQuizButtonThread::runAdafruitCode() {
             }
         }
     }
+#endif //BUILD_FOR_PI
 }
 
 // Set one GPIO pin attribute through the Sysfs interface.
 int QQuizButtonThread::pinConfig(int pin, char *attr, char *value) {
+#ifdef BUILD_FOR_PI
     char filename[50];
     int  fd, w, len = strlen(value);
     sprintf(filename, "%s/gpio%d/%s", sysfs_root, pin, attr);
@@ -241,12 +246,14 @@ int QQuizButtonThread::pinConfig(int pin, char *attr, char *value) {
     w = write(fd, value, len);
     close(fd);
     return (w != len); // 0 = success
+#endif //BUILD_FOR_PI
 }
 
 // Un-export any Sysfs pins used; don't leave filesystem cruft.  Also
 // restores any GND pins to inputs.  Write errors are ignored as pins
 // may be in a partially-initialized state.
 void QQuizButtonThread::cleanup() {
+#ifdef BUILD_FOR_PI
     char buf[50];
     int  fd, i;
     sprintf(buf, "%s/unexport", sysfs_root);
@@ -258,4 +265,6 @@ void QQuizButtonThread::cleanup() {
         }
         close(fd);
     }
+#endif //BUILD_FOR_PI
 }
+
