@@ -1,4 +1,6 @@
 #include "qquizuicontroller.h"
+#include <QThread>
+#include <QtDebug>
 
 #define PAGE_QUESTIONS "questionPage"
 #define PAGE_HIGH_SCORE "highScorePage"
@@ -17,9 +19,20 @@ QQuizUIController::QQuizUIController(QQuizGameState *gameState, QObject *parent)
     mGameState = gameState;
     setPage(PAGE_HIGH_SCORE);
 
+    mButtonThread = new QQuizButtonThread();
+    mButtonThread->addButton(27, "green");
+    mButtonThread->addButton(11, "red");
+
     QObject::connect(gameState, &QQuizGameState::gameStarted, this, &QQuizUIController::onGameStarted);
     QObject::connect(gameState, &QQuizGameState::newQuestion, this, &QQuizUIController::onNewQuestion);
     QObject::connect(gameState, &QQuizGameState::gameFinished, this, &QQuizUIController::onGameFinished);
+    QObject::connect(gameState->timeCounter(), &QQuizTimeCounter::updated, this, &QQuizUIController::onTimerFired);
+    QObject::connect(mButtonThread, &QQuizButtonThread::buttonPressed, this, &QQuizUIController::onButtonPressed);
+    mButtonThread->start(QThread::HighPriority);
+}
+
+QQuizUIController::~QQuizUIController() {
+    delete mButtonThread;
 }
 
 void QQuizUIController::setPage(QString page) {
@@ -43,6 +56,11 @@ void QQuizUIController::onGameFinished() {
     setPage(PAGE_HIGH_SCORE);
 }
 
+void QQuizUIController::onTimerFired(long time) {
+    mTimerText = QString::number(time);
+    emit newTimerText(mTimerText);
+}
+
 void QQuizUIController::annePressed() {
     mGameState->answerCurrentQuestion("Anne");
 }
@@ -64,4 +82,16 @@ QString QQuizUIController::questionText() {
 
 QString QQuizUIController::questionCount() {
     return QString::number(mCurrentQuestionCount);
+}
+
+QString QQuizUIController::timerText() {
+    return mTimerText;
+}
+
+void QQuizUIController::onButtonPressed(QString id) {
+    if (id.compare(id, "green") == 0) {
+        annePressed();
+    } else if (id.compare(id, "red") == 0) {
+        shawnPressed();
+    }
 }

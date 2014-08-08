@@ -1,11 +1,14 @@
 #include "qquizgamestate.h"
 #include <QtDebug>
 
+#define TIME_PENALTY 5000
+
 QQuizGameState::QQuizGameState(QQuizQuestions* questions, QQuizResults* results, QObject *parent) :
     QObject(parent)
 {
     mGameQuestions = questions;
     mResults = results;
+    mQuizTimeCounter = new QQuizTimeCounter();
 }
 
 void QQuizGameState::startGame(QString playerName) {
@@ -13,7 +16,7 @@ void QQuizGameState::startGame(QString playerName) {
     mCurrentQuestions = mGameQuestions->getRandomQuestions(QUESTIONS_PER_GAME);
     mCurrentQuestionIndex = 0;
     mInGame = true;
-
+    mQuizTimeCounter->start();
     emit gameStarted();
     emit newQuestion(mCurrentQuestions.at(mCurrentQuestionIndex), mCurrentQuestionIndex + 1);
 }
@@ -22,8 +25,8 @@ bool QQuizGameState::answerCurrentQuestion(QString answer) {
     bool result = true;
 
     QuizQuestion* currentQuestion = mCurrentQuestions.at(mCurrentQuestionIndex);
-    if (QString::compare(currentQuestion->answer(), answer) == 0) {
-        // add the delay to the timer
+    if (QString::compare(currentQuestion->answer(), answer) != 0) {
+        mQuizTimeCounter->addElapsedTime(TIME_PENALTY);
         result = false;
     }
 
@@ -39,12 +42,15 @@ bool QQuizGameState::answerCurrentQuestion(QString answer) {
 }
 
 void QQuizGameState::finishGame() {
-    // stop the timer
+    mQuizTimeCounter->stop();
 
-    qDebug() << "Timer code isn't being inserted into the result";
-    QQuizResult result(mCurrentPlayerName, 10); // TODO get the proper value from the time
+    QQuizResult result(mCurrentPlayerName, mQuizTimeCounter->elapsedTime());
     mResults->addResult(&result);
 
     mInGame = false;
     emit gameFinished();
+}
+
+QQuizTimeCounter* QQuizGameState::timeCounter() {
+    return mQuizTimeCounter;
 }

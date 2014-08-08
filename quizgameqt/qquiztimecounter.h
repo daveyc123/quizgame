@@ -20,7 +20,7 @@ signals:
 public slots:
     void start();
     void stop();
-
+    void addElapsedTime(long time);
 
 private slots:
     void sendUpdate();

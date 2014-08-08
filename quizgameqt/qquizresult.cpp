@@ -7,10 +7,10 @@ QQuizResult::QQuizResult(QString name, long score, QObject *parent) :
     mScore = score;
 }
 
-QString QQuizResult::getName() {
+QString QQuizResult::name() {
     return mName;
 }
 
-long QQuizResult::getScore() {
+long QQuizResult::score() {
     return mScore;
 }
