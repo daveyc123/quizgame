@@ -54,7 +54,7 @@ int main(int argc, const char* argv[])
     goto fail2;
   }
 
-  error = FT_Set_Char_Size(face, 0, 16*64, 72, 72);
+  error = FT_Set_Char_Size(face, 0, 15*64, 72, 72);
   if (error) {
     fprintf(stderr, "Failed to set font size: %d\n", error);
     goto fail3;
