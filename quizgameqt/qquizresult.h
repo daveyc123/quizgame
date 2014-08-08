@@ -10,8 +10,8 @@ public:
     explicit QQuizResult(QString name, long score, QObject *parent = 0);
 
 public slots:
-    QString getName();
-    long getScore();
+    QString name();
+    long score();
 
 private:
     QString mName;

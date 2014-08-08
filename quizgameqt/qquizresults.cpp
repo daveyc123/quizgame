@@ -7,10 +7,13 @@
 #include <QtDebug>
 #include <QIODevice>
 #include <QJsonParseError>
+#include <QtDebug>
 
 QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
     QObject(parent)
 {
+    mResultsFile = resultsFile;
+
     QFile loadFile(resultsFile);
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qDebug() << "Couldn't open results file: " << resultsFile;
@@ -36,8 +39,8 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
         }
 
         foreach(QQuizResult* r, mResults) {
-            qDebug() << r->getName();
-            qDebug() << r->getScore();
+            qDebug() << r->name();
+            qDebug() << r->score();
         }
 
         loadFile.close();
@@ -45,9 +48,23 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
 }
 
 void QQuizResults::addResult(QQuizResult *result) {
-    //  TODO some smarter sorting
-    qDebug() << "Need some smarter sorting in addResult()";
-    mResults.append(result);
+    if (mResults.size() == 0) {
+        mResults.append(result);
+    } else {
+        for (int i=0; i<mResults.size(); i++) {
+            if (i==0 && mResults[i]->score() > result->score()) {
+                mResults.insert(0, result);
+                break;
+            } else if (i==(mResults.size() - 1)) {
+                mResults.append(result);
+                break;
+            } else if (result->score() > mResults[i]->score() && result->score() < mResults[i+1]->score()) {
+                mResults.append(result);
+                break;
+            }
+        }
+    }
+
     serialize(); // save in case we crash
 }
 
@@ -56,7 +73,29 @@ QList<QQuizResult*> QQuizResults::getResults() {
 }
 
 void QQuizResults::serialize() {
-    qDebug() << "You haven't implement this yet!";
+
+    QJsonObject jsonRoot;
+    QJsonArray jsonResults;
+
+    foreach(QQuizResult* r, mResults) {
+        QJsonObject jsonResult;
+        jsonResult.insert("name", r->name());
+        QJsonValue score((int)r->score());
+        jsonResult.insert("score", score);
+        jsonResults.append(jsonResult);
+        qDebug() << r->name() << ": " << r->score();
+    }
+    jsonRoot.insert("results", jsonResults);
+
+    QFile saveFile(mResultsFile);
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qDebug() << "Couldn't open the save file for writing";
+        return;
+    }
+
+    QJsonDocument saveDoc(jsonRoot);
+    saveFile.write(saveDoc.toJson());
+    //qDebug() << "You haven't implement this yet!";
 }
 
 void QQuizResults::clearScores() {

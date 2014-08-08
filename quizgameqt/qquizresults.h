@@ -21,7 +21,7 @@ private:
     void serialize();
 private:
     QList<QQuizResult*> mResults;
-
+    QString mResultsFile;
 
 
 };
