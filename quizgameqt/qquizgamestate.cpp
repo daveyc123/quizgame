@@ -54,3 +54,7 @@ void QQuizGameState::finishGame() {
 QQuizTimeCounter* QQuizGameState::timeCounter() {
     return mQuizTimeCounter;
 }
+
+QQuizResults* QQuizGameState::results() {
+    return mResults;
+}

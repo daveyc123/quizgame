@@ -8,24 +8,24 @@ Item {
         color: "#FFFFFF"
     }
 
-    ListModel {
-        id: myModel
-        ListElement {
-            rank: 1
-            name: "Bill Smith"
-            number: "555 3264"
-        }
-        ListElement {
-            rank: 2
-            name: "John Brown"
-            number: "555 8426"
-        }
-        ListElement {
-            rank: 3
-            name: "Sam Wise"
-            number: "555 0473"
-        }
-    }
+//    ListModel {
+//        id: myModel
+//        ListElement {
+//            rank: 1
+//            name: "Bill Smith"
+//            number: "555 3264"
+//        }
+//        ListElement {
+//            rank: 2
+//            name: "John Brown"
+//            number: "555 8426"
+//        }
+//        ListElement {
+//            rank: 3
+//            name: "Sam Wise"
+//            number: "555 0473"
+//        }
+//    }
 
     Text {
         id: highScoresText
@@ -44,9 +44,9 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        model: myModel
+        model: resultsModel
         delegate: Text {
-            text: parseInt(rank) + ". " + name + ": " + number
+            text: name + ": " + parseInt(score)
         }
     }
 
