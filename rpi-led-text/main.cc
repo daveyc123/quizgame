@@ -505,6 +505,25 @@ private:
   uint8_t b_;
 };
 
+class PWMTest : public RGBMatrixManipulator {
+public:
+  PWMTest(RGBMatrix *m) : RGBMatrixManipulator(m) {}
+  void Run() {
+    const int width = matrix_->width();
+    const int height = matrix_->height();
+    unsigned char val = 0xff;
+    for (int x = 0; x < width; ++x) {
+      for (int y = 0; y < height; ++y) {
+        matrix_->SetPixel(x, y, val--, 0, 0);
+      }
+    }
+
+    while (running_) {
+      sleep(1);
+    }
+  }
+};
+
 int main(int argc, char *argv[]) {
   int demo = 0;
   if (argc > 1) {
@@ -546,6 +565,10 @@ int main(int argc, char *argv[]) {
 
   case 4:
     image_gen = new TextRenderer(&m);
+    break;
+
+  case 5:
+    image_gen = new PWMTest(&m);
     break;
 
   default:
