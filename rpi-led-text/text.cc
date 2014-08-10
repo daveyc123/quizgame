@@ -33,14 +33,45 @@ void RGBCanvas::SetPixel(int x, int y, unsigned char r, unsigned char g, unsigne
   pixel->b = b;
 }
 
-void RGBCanvas::Display(RGBMatrix* m)
+void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap)
 {
-  int i;
-  int j;
+  int i; /* x position on the display */
+  int j; /* y position on the display */
+  int pix_i; /* x position on the canvas */
+  int pix_j; /* y_position on the canvas */
 
-  for (i = 0; i < m->width() && i < width_; i++) {
-    for (j = 0; j < m->height() && j < height_; j++) {
-      Pixel* pixel = &pixbuf_[j * width_ + i];
+  for (i = 0; i < m->width(); i++) {
+    pix_i = i - x_offset;
+    if (pix_i < 0 || pix_i >= width_) {
+      /* Wrapping */
+      if (x_wrap) {
+        if (pix_i < 0) {
+          pix_i = pix_i + width_;
+        } else if (pix_i >= width_) {
+          pix_i = pix_i - width_;
+        }
+      } else {
+        continue;
+      }
+    }
+
+    for (j = 0; j < m->height(); j++) {
+      pix_j = j - y_offset;
+      if (pix_j < 0 || pix_j >= height_) {
+        // /* Wrapping */
+        // if (y_wrap) {
+        //   if (pix_j < 0) {
+        //     pix_j = height_ - pix_j;
+        //   } else if (pix_j >= height_) {
+        //     pix_j = pix_j - height_;
+        //   }
+        // } else {
+        //   continue;
+        // }
+        continue;
+      }
+
+      Pixel* pixel = &pixbuf_[pix_j * width_ + pix_i];
       m->SetPixel(i, j, pixel->r, pixel->g, pixel->b);
     }
   }
@@ -55,16 +86,16 @@ void Font::PaintChar(RenderedChar* rchar, RGBCanvas* canvas, int pen_x, int pen_
     FT_Int y_max = y + rchar->rows;
     unsigned char char_pixel;
 
-#ifdef DEBUG
-    printf("DEBUG: pen_x = %d, pen_y = %d, x = %d, y = %d\n", pen_x, pen_y, x, y);
-#endif
+// #ifdef DEBUG
+//     printf("DEBUG: pen_x = %d, pen_y = %d, x = %d, y = %d\n", pen_x, pen_y, x, y);
+// #endif
 
     for (i = x, p = 0; i < x_max; i++, p++) {
       for (j = y, q = 0; j < y_max; j++, q++) {
         if (i < 0 || j < 0 || i >= canvas->width() || j >= canvas->height()) {
-#ifdef DEBUG
-          printf("Character chopped\n");
-#endif
+// #ifdef DEBUG
+//           printf("Character chopped\n");
+// #endif
           continue;
         }
 
@@ -97,6 +128,24 @@ void Font::PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y
     canvas->last_pen.x = pen_x;
     canvas->last_pen.y = pen_y;
   }
+}
+
+unsigned Font::GetWidth(const char* text)
+{
+  char c;
+  unsigned width = 0;
+  RenderedChar* rchar;
+
+  if (text == NULL) {
+    return 0;
+  }
+
+  while (c = *text++) {
+    rchar = &char_cache_[c];
+    width += rchar->advance_x;
+  }
+
+  return width;
 }
 
 unsigned char* Font::UnpackMonoBitmap_(FT_Bitmap* bitmap)
@@ -146,7 +195,8 @@ void Font::RenderAndCache_(unsigned char val)
 
   glyph_index = FT_Get_Char_Index(face_, val);
   if (glyph_index == 0) {
-    fprintf(stderr, "Failed to get glyph index\n");
+    // Reasonably common scenario, not worth printing an error
+    //fprintf(stderr, "Failed to get glyph index for glyph '%d'\n", val);
     return;
   }
 
@@ -173,9 +223,9 @@ void Font::RenderAndCache_(unsigned char val)
   char_cache_[val].bitmap_top = slot->bitmap_top;
   char_cache_[val].buf = UnpackMonoBitmap_(bitmap);
 
-#ifdef DEBUG
-  printf("DEBUG: Rendered %d '%c': width=%d, rows=%d, pitch=%d\n", val, val, bitmap->width, bitmap->rows, bitmap->pitch);
-#endif
+// #ifdef DEBUG
+//   printf("DEBUG: Rendered %d '%c': width=%d, rows=%d, pitch=%d\n", val, val, bitmap->width, bitmap->rows, bitmap->pitch);
+// #endif
 
 }
 

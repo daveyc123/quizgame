@@ -27,7 +27,15 @@ public:
   	InitCanvas_();
   };
 
-  void Display(RGBMatrix* m);
+  /**
+   * x_offset: A positive value will shift the canvas to the right, negative to the left.
+   * y_offset: A positive value will shift the canvas down, negative up.
+   * x_wrap: If true, will wrap either the left or right edge of the canvas when appropriate.
+   * y_wrap: If true, will wrap either the top or bottom edge of the canvas when appropriate.
+   *
+   * Wrapping is appropriate when one canvas edge is on display while the opposite edge is not.
+   */
+  void Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap);
   void SetPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b);
   unsigned width() { return width_; };
   unsigned height() { return height_; };
@@ -50,6 +58,7 @@ public:
 
   void PaintChar(RenderedChar* rchar, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
   void PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
+  unsigned GetWidth(const char* text);
 
 private:
   FT_Library library_;
