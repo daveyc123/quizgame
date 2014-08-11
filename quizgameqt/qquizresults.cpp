@@ -54,7 +54,7 @@ void QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
                 mResults.append(result);
                 break;
             } else if (result->score() > mResults[i]->score() && result->score() < mResults[i+1]->score()) {
-                mResults.append(result);
+                mResults.insert(i+1, result);
                 break;
             }
         }
@@ -84,7 +84,6 @@ void QQuizResults::serialize() {
         QJsonValue score((int)r->score());
         jsonResult.insert("score", score);
         jsonResults.append(jsonResult);
-        qDebug() << r->name() << ": " << r->score();
     }
     jsonRoot.insert("results", jsonResults);
 

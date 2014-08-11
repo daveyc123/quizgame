@@ -2,13 +2,26 @@ import QtQuick 2.2
 import QtQuick.Window 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.0
+import QtMultimedia 5.0
 
 Item {
     anchors.fill: parent
 
     Rectangle {
         anchors.fill: parent
-        color: "#FFFFFF"
+        color: "#061275"
+    }
+
+    FontLoader {
+        source: "jeopardy.ttf"
+    }
+
+    FontLoader {
+        source: "timer2.otf"
+    }
+
+    FontLoader {
+        source: "timer.ttf"
     }
 
     Text {
@@ -18,16 +31,52 @@ Item {
         anchors.top: parent.top
         anchors.leftMargin: 5
         anchors.topMargin: 5
+        font.family: "Korinna"
+        font.pointSize: 40
+        font.capitalization: Font.AllUppercase
+        color: "#FFFFFF"
     }
 
     Text {
-        id: timer
-        text: controller.timerText
+        id: timerLeft
+        text: controller.timerText.toString().split(".")[0]
+
+        anchors.right: timerPeriod.right
+        anchors.top: parent.top
+        anchors.rightMargin: 5
+        anchors.topMargin: 8
+
+        font.family: "Segment7"
+        font.pointSize: 50
+        color: "#FFFFFF"
+    }
+
+    Text {
+        id: timerPeriod
+        text: "."
+
+        anchors.right: timerRight.left
+        anchors.top: parent.top
+        anchors.rightMargin: 5
+        anchors.topMargin: 8
+
+        font.family: "DS-Digital"
+        font.pointSize: 50
+        color: "#FFFFFF"
+    }
+
+    Text {
+        id: timerRight
+        text: controller.timerText.toString().split(".")[1]
 
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.rightMargin: 5
-        anchors.topMargin: 5
+        anchors.topMargin: 8
+
+        font.family: "Segment7"
+        font.pointSize: 50
+        color: "#FFFFFF"
     }
 
     Text {
@@ -37,11 +86,16 @@ Item {
         width: parent.width * 0.9
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
+
+        font.capitalization: Font.AllUppercase
+        font.family: "Korinna"
+        font.pointSize: 40
+        color: "#FFFFFF"
     }
 
     Button {
         text: "Anne"
-        onClicked: controller.annePressed();
+        onClicked: {correctAnswerSoundEffect.play(); controller.annePressed(); console.log(correctAnswerSoundEffect.status == SoundEffect.Ready); console.log(correctAnswerSoundEffect.volume)}
         anchors.bottom : parent.bottom
         anchors.left: parent.left
         anchors.bottomMargin: 20
@@ -56,6 +110,22 @@ Item {
         anchors.bottomMargin: 20
         anchors.rightMargin: 20
     }
+
+    SoundEffect {
+         id: correctAnswerSoundEffect
+         source: "file:///Users/dcummings/Downloads/ff-zero2.wav"
+         muted: false
+         loops: SoundEffect.Infinite
+         onPlayingChanged: {console.log("In theory I'm playing")}
+    }
+
+//    Audio {
+//         id: correctAnswerSoundEffect
+//         source: "file://Users/dcummings/Downloads/ff-strike3.wav"
+//         muted: false
+//         loops: SoundEffect.Infinite
+//    }
+
 
 //    Button {
 //        text: "Reset clock"

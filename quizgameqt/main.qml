@@ -3,8 +3,8 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 
 ApplicationWindow {
-    width: 360
-    height: 360
+    width: 1280
+    height: 1024
     visible: true
 
     StackView {
@@ -15,10 +15,7 @@ ApplicationWindow {
 
     Component {
         id: highScorePage
-        Item {
-            HighScores {}
-            anchors.fill: parent
-        }
+        HighScores {}
     }
 
     Component {
