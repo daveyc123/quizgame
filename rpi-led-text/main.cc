@@ -1,5 +1,6 @@
 #include "thread.h"
 #include "led-matrix.h"
+#include "text.h"
 
 #include <assert.h>
 #include <unistd.h>
@@ -7,9 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <algorithm>
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 using std::min;
 using std::max;
@@ -246,198 +244,23 @@ private:
   uint32_t horizontal_position_;
 };
 
-struct RenderedChar {
-public:
-  FT_Int width;
-  FT_Int rows;
-  FT_Int pitch;
-  FT_Int advance_x;
-  FT_Int advance_y;
-  FT_Int bitmap_left;
-  FT_Int bitmap_top;
-  unsigned char* buf;
-};
-
 // Simple generator that walks the pixel matrix
 class TextRenderer : public RGBMatrixManipulator {
 public:
-  TextRenderer(RGBMatrix *m) : RGBMatrixManipulator(m) {
-    InitCache();
-  }
-
-  void DisplayBitmap(unsigned char val) {
-    FT_Int i, j, p, q;
-    RenderedChar* rchar = &char_cache_[val];
-    FT_Int x = rchar->bitmap_left;
-    FT_Int y = matrix_->height() - rchar->bitmap_top;
-    FT_Int x_max = x + rchar->width;
-    FT_Int y_max = y + rchar->rows;
-    unsigned char pixel;
-
-    for (i = x, p = 0; i < x_max; i++, p++) {
-      for (j = y, q = 0; j < y_max; j++, q++) {
-        if (i < 0 || j < 0 || i >= matrix_->width() || j >= matrix_->height()) {
-          printf("Character chopped\n");
-          continue;
-        }
-
-        pixel = rchar->buf[q * rchar->width + p];
-        matrix_->SetPixel(i, j, pixel ? 0xff : 0, pixel ? 0xff : 0, pixel ? 0xff : 0);
-      }
-    }
-  }
+  TextRenderer(RGBMatrix *m) : RGBMatrixManipulator(m) {}
 
   void Run() {
-    FT_GlyphSlot slot;
-    FT_Error error;
-    unsigned char val = '!';
+    const char* text = "Woot! ";
+    Font font("fonts/Oswald-Bold.ttf", 15);
+    unsigned canvas_width = font.GetWidth(text);
+    RGBCanvas canvas(canvas_width, matrix_->height());
+    int i = 0;
 
-    slot = face_->glyph;
+    font.PaintString(text, &canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
     while (running_) {
-      DisplayBitmap(val);
-      val += 1;
-      if (val > '~') {
-        val = '!';
-      }
-      usleep(500000);
-      matrix_->ClearScreen();
+      canvas.Display(matrix_, (i++ % canvas_width), 0, true, 0);
+      usleep(100000);
     }
-  }
-
-private:
-  FT_Library library_;
-  FT_Face face_;
-  RenderedChar char_cache_[256];
-
-  // bool GetCharPixel_(const FT_Bitmap* bitmap, const int x, const int y)
-  // {
-  //   int pitch = abs(bitmap->pitch);
-  //   unsigned char *row = &bitmap->buffer[pitch * y];
-  //   char cValue = row[x >> 3];
-
-  //   return (cValue & (128 >> (x & 7))) != 0;
-  // }
-
-  void InitCache()
-  {
-    const int width = matrix_->width();
-    const int height = matrix_->height();
-    unsigned i;
-    FT_GlyphSlot slot;
-    FT_Error error;
-
-    error = FT_Init_FreeType(&library_);
-    if (error) {
-      fprintf(stderr, "Failed to initialize FreeType: %d\n", error);
-      goto fail1;
-    }
-
-    error = FT_New_Face(library_, "fonts/Oswald-Bold.ttf", 0, &face_);
-    if (error) {
-      fprintf(stderr, "Failed to load font: %d\n", error);
-      goto fail2;
-    }
-
-    error = FT_Set_Char_Size(face_, 0, 15*64, 72, 72);
-    if (error) {
-      fprintf(stderr, "Failed to set font size: %d\n", error);
-      goto fail3;
-    }
-
-    for (i = 0; i < sizeof(char_cache_) / sizeof(char_cache_[0]); i++) {
-      RenderAndCache_(i);
-    }
-
-    return;
-
-    fail3:
-    FT_Done_Face(face_);
-
-    fail2:
-    FT_Done_FreeType(library_);
-
-    fail1:
-    return;
-  }
-
-  void RenderAndCache_(unsigned char val)
-  {
-    FT_UInt glyph_index;
-    FT_GlyphSlot slot;
-    FT_Bitmap* bitmap;
-    FT_Error error;
-
-    // printf("Rendering %d (%c)\n", val, val);
-
-    // Currently only support caching ASCII chars
-    if (val > 255) {
-      fprintf(stderr, "Don't support caching non-ASCII characters\n");
-      return;
-    }
-
-    glyph_index = FT_Get_Char_Index(face_, val);
-    if (glyph_index == 0) {
-      fprintf(stderr, "Failed to get glyph index\n");
-      return;
-    }
-
-    error = FT_Load_Glyph(face_, glyph_index, FT_LOAD_MONOCHROME);
-    if (error) {
-      fprintf(stderr, "Failed to load glyph: %d\n", error);
-      return;
-    }
-
-    error = FT_Render_Glyph(face_->glyph, FT_RENDER_MODE_MONO);
-    if (error) {
-      fprintf(stderr, "Failed to render glyph: %d\n", error);
-      return;
-    }
-
-    slot = face_->glyph;
-    bitmap = &slot->bitmap;
-    char_cache_[val].width = bitmap->width;
-    char_cache_[val].rows = bitmap->rows;
-    char_cache_[val].pitch = bitmap->pitch;
-    char_cache_[val].advance_x = slot->advance.x;
-    char_cache_[val].advance_y = slot->advance.y;
-    char_cache_[val].bitmap_left = slot->bitmap_left;
-    char_cache_[val].bitmap_top = slot->bitmap_top;
-    char_cache_[val].buf = UnpackMonoBitmap_(bitmap);
-
-#ifdef DEBUG
-    printf("Rendered %d '%c': width=%d, rows=%d, pitch=%d\n", val, val, bitmap->width, bitmap->rows, bitmap->pitch);
-#endif
-
-  }
-
-  unsigned char* UnpackMonoBitmap_(FT_Bitmap* bitmap)
-  {
-    unsigned char* result;
-    int y, x, byte_index, num_bits_done, rowstart, bits, bit_index;
-    unsigned char byte_value;
-    
-    result = (unsigned char*)malloc(bitmap->rows * bitmap->width);
-    
-    for (y = 0; y < bitmap->rows; y++) {
-      for (byte_index = 0; byte_index < bitmap->pitch; byte_index++) {
-        byte_value = bitmap->buffer[y * bitmap->pitch + byte_index];
-        num_bits_done = byte_index * 8;
-        rowstart = y * bitmap->width + byte_index * 8;
-
-        bits = 8;
-        if ((bitmap->width - num_bits_done) < 8) {
-          bits = bitmap->width - num_bits_done;
-        }
-            
-        for (bit_index = 0; bit_index < bits; bit_index++) {
-          int bit;
-          bit = byte_value & (1 << (7 - bit_index));
-          result[rowstart + bit_index] = bit;
-        }
-      }
-    }
-    
-    return result;
   }
 };
 
@@ -469,6 +292,25 @@ private:
   uint8_t r_;
   uint8_t g_;
   uint8_t b_;
+};
+
+class PWMTest : public RGBMatrixManipulator {
+public:
+  PWMTest(RGBMatrix *m) : RGBMatrixManipulator(m) {}
+  void Run() {
+    const int width = matrix_->width();
+    const int height = matrix_->height();
+    unsigned char val = 0xff;
+    for (int x = 0; x < width; ++x) {
+      for (int y = 0; y < height; ++y) {
+        matrix_->SetPixel(x, y, val--, 0, 0);
+      }
+    }
+
+    while (running_) {
+      sleep(1);
+    }
+  }
 };
 
 int main(int argc, char *argv[]) {
@@ -512,6 +354,10 @@ int main(int argc, char *argv[]) {
 
   case 4:
     image_gen = new TextRenderer(&m);
+    break;
+
+  case 5:
+    image_gen = new PWMTest(&m);
     break;
 
   default:
