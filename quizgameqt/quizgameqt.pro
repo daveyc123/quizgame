@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets multimedia
 
 QMAKE_CXXFLAGS += -fpermissive
 
@@ -33,6 +33,7 @@ HEADERS += \
     qquizbuttonthread.h
 
 OTHER_FILES += \
-    questions.json
+    questions.json \
+    ff-strike3.wav
 
 

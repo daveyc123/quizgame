@@ -61,30 +61,36 @@ Item {
 
         TextField {
             id: playerName
+            focus: true
             anchors.left: nameLabel.right
             anchors.leftMargin: 5
             anchors.right: parent.right
-        }
-
-        width: parent.width / 2
-        anchors.bottom: startGameButton.top
-        anchors.bottomMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-
-    Button {
-        id: startGameButton
-        text: qsTr("Start Game")
-        onClicked: {
-            if (playerName.text != null) {
-                controller.startNewGame(playerName.text);
+            onAccepted: {
+                if (playerName.text != null) {
+                    controller.startNewGame(playerName.text);
+                }
             }
         }
 
+        width: parent.width / 2
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
     }
+
+//    Button {
+//        id: startGameButton
+//        text: qsTr("Start Game")
+//        onClicked: {
+//            if (playerName.text != null) {
+//                controller.startNewGame(playerName.text);
+//            }
+//        }
+
+//        anchors.bottom:
+//        anchors.bottomMargin: 10
+//        anchors.horizontalCenter: parent.horizontalCenter
+//    }
 
     anchors.fill: parent
 }

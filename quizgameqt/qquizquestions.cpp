@@ -36,11 +36,6 @@ QQuizQuestions::QQuizQuestions(QString questionsFile, QObject *parent) :
             mQuestions.append(question);
         }
 
-        foreach(QuizQuestion* q, mQuestions) {
-            qDebug() << q->text();
-            qDebug() << q->answer();
-        }
-
         loadFile.close();
     }
 }
