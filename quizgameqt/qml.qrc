@@ -3,5 +3,9 @@
         <file>main.qml</file>
         <file>HighScores.qml</file>
         <file>Question.qml</file>
+        <file>ff-strike3.wav</file>
+        <file>jeopardy.ttf</file>
+        <file>timer.ttf</file>
+        <file>timer2.otf</file>
     </qresource>
 </RCC>

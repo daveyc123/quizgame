@@ -35,7 +35,14 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
             QJsonObject resultJson = resultsArray[i].toObject();
 
             QQuizResult *result = new QQuizResult(resultJson["name"].toString(), (long)resultJson["score"].toInt()); // TODO losing some digits
+            qDebug() << "--------------";
+            qDebug() << "Found result:" << result->name() << result->score();
             addResult(result, false); // should be serialized in sort order, but in case they've been tweaked use addResult to get proper sorting
+            foreach (QQuizResult *realResult, mResults) {
+             qDebug() << "List result:" << realResult->name() << realResult->score();
+            }
+
+            qDebug() << "--------------";
         }
 
         loadFile.close();
@@ -54,7 +61,7 @@ void QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
                 mResults.append(result);
                 break;
             } else if (result->score() > mResults[i]->score() && result->score() < mResults[i+1]->score()) {
-                mResults.append(result);
+                mResults.insert(i+1, result);
                 break;
             }
         }
@@ -84,7 +91,6 @@ void QQuizResults::serialize() {
         QJsonValue score((int)r->score());
         jsonResult.insert("score", score);
         jsonResults.append(jsonResult);
-        qDebug() << r->name() << ": " << r->score();
     }
     jsonRoot.insert("results", jsonResults);
 
