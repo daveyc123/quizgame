@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <time.h>
 
 using std::min;
 using std::max;
@@ -258,7 +259,77 @@ public:
 
     font.PaintString(text, &canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
     while (running_) {
-      canvas.Display(matrix_, (i++ % canvas_width), 0, true, 0);
+      canvas.Display(matrix_, (i++ % canvas_width), 0, true, false);
+      usleep(50000);
+    }
+  }
+};
+
+class Pictograms : public RGBMatrixManipulator {
+public:
+  Pictograms(RGBMatrix *m) : RGBMatrixManipulator(m) {}
+
+  void Run() {
+    char buf['}' - ' ' + 2];
+    Font font("fonts/modernpics.otf", 16);
+    char c;
+    int i;
+    unsigned canvas_width;
+    RGBCanvas* canvas;
+
+    for (c=' ', i=0; c <= '}'; c++, i++) {
+      buf[i] = c;
+    }
+    buf[i] = NULL;
+
+    canvas_width = font.GetWidth(buf);
+    canvas = new RGBCanvas(canvas_width, matrix_->height());
+    font.PaintString(buf, canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
+
+    i = 0;
+    while (running_) {
+      canvas->Display(matrix_, (i++ % canvas_width), 0, true, false);
+      usleep(50000);
+    }
+  }
+};
+
+class Timer : public RGBMatrixManipulator {
+public:
+  Timer(RGBMatrix *m) : RGBMatrixManipulator(m) {}
+
+  void Run() {
+    Font font("fonts/UbuntuMono-Bold.ttf", 17);
+    unsigned canvas_width = font.GetWidth("00:00.0");
+    RGBCanvas canvas(canvas_width, matrix_->height());
+    struct timespec start_ts;
+    struct timespec cur_ts;
+    uint64_t start_ns;
+    uint64_t cur_ns;
+    uint64_t delta_ms;
+    unsigned minutes;
+    unsigned seconds;
+    unsigned tenthsofseconds;
+    unsigned remainder;
+    char timestr[16];
+
+    clock_gettime(CLOCK_MONOTONIC, &start_ts);
+    start_ns = start_ts.tv_sec * 1e9;
+    start_ns += start_ts.tv_nsec;
+    while (running_) {
+      clock_gettime(CLOCK_MONOTONIC, &cur_ts);
+      cur_ns = cur_ts.tv_sec * 1e9;
+      cur_ns += cur_ts.tv_nsec;
+      delta_ms = (cur_ns - start_ns) / 1e6;
+      minutes = delta_ms / 60000;
+      remainder = delta_ms % 60000;
+      seconds = remainder / 1000;
+      remainder = remainder % 1000;
+      tenthsofseconds = remainder / 100;
+      snprintf(timestr, sizeof(timestr), "%02d:%02d.%d", minutes, seconds, tenthsofseconds);
+      canvas.Clear();
+      font.PaintString(timestr, &canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
+      canvas.Display(matrix_, (matrix_->width() / 2) - (canvas_width / 2), 0, false, false);
       usleep(100000);
     }
   }
@@ -357,6 +428,18 @@ int main(int argc, char *argv[]) {
     break;
 
   case 5:
+    image_gen = new Timer(&m);
+    break;
+
+  case 6:
+    image_gen = new Pictograms(&m);
+    break;
+
+  case 7:
+    image_gen = new PixelIterator(&m, 0, 0xff, 0);
+    break;
+
+  case 8:
     image_gen = new PWMTest(&m);
     break;
 

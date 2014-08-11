@@ -33,6 +33,11 @@ void RGBCanvas::SetPixel(int x, int y, unsigned char r, unsigned char g, unsigne
   pixel->b = b;
 }
 
+void RGBCanvas::Clear()
+{
+  memset(pixbuf_, 0, width_ * height_ * sizeof(*pixbuf_));
+}
+
 void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap)
 {
   int i; /* x position on the display */
