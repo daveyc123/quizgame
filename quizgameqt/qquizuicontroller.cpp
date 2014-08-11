@@ -69,7 +69,7 @@ void QQuizUIController::onGameFinished() {
 }
 
 void QQuizUIController::onTimerFired(long time) {
-    mTimerText = QString::number(time);
+    mTimerText = QString::number(((float)time)/1000.0);
     emit newTimerText(mTimerText);
 }
 
