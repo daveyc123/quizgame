@@ -59,16 +59,15 @@ void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, b
       pix_j = j - y_offset;
       if (pix_j < 0 || pix_j >= height_) {
         // /* Wrapping */
-        // if (y_wrap) {
-        //   if (pix_j < 0) {
-        //     pix_j = height_ - pix_j;
-        //   } else if (pix_j >= height_) {
-        //     pix_j = pix_j - height_;
-        //   }
-        // } else {
-        //   continue;
-        // }
-        continue;
+        if (y_wrap) {
+          if (pix_j < 0) {
+            pix_j = pix_j + height_;
+          } else if (pix_j >= height_) {
+            pix_j = pix_j - height_;
+          }
+        } else {
+          continue;
+        }
       }
 
       Pixel* pixel = &pixbuf_[pix_j * width_ + pix_i];
