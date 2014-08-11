@@ -35,14 +35,7 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
             QJsonObject resultJson = resultsArray[i].toObject();
 
             QQuizResult *result = new QQuizResult(resultJson["name"].toString(), (long)resultJson["score"].toInt()); // TODO losing some digits
-            qDebug() << "--------------";
-            qDebug() << "Found result:" << result->name() << result->score();
             addResult(result, false); // should be serialized in sort order, but in case they've been tweaked use addResult to get proper sorting
-            foreach (QQuizResult *realResult, mResults) {
-             qDebug() << "List result:" << realResult->name() << realResult->score();
-            }
-
-            qDebug() << "--------------";
         }
 
         loadFile.close();
