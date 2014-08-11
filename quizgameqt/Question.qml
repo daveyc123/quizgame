@@ -44,10 +44,10 @@ Item {
         anchors.right: timerPeriod.right
         anchors.top: parent.top
         anchors.rightMargin: 5
-        anchors.topMargin: 5
+        anchors.topMargin: 8
 
         font.family: "Segment7"
-        font.pointSize: 40
+        font.pointSize: 50
         color: "#FFFFFF"
     }
 
@@ -58,10 +58,10 @@ Item {
         anchors.right: timerRight.left
         anchors.top: parent.top
         anchors.rightMargin: 5
-        anchors.topMargin: 5
+        anchors.topMargin: 8
 
         font.family: "DS-Digital"
-        font.pointSize: 40
+        font.pointSize: 50
         color: "#FFFFFF"
     }
 
@@ -72,10 +72,10 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.rightMargin: 5
-        anchors.topMargin: 5
+        anchors.topMargin: 8
 
         font.family: "Segment7"
-        font.pointSize: 40
+        font.pointSize: 50
         color: "#FFFFFF"
     }
 
