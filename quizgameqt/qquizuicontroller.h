@@ -16,6 +16,8 @@ class QQuizUIController : public QObject
     Q_PROPERTY(QString questionText READ questionText NOTIFY newQuestionText)
     Q_PROPERTY(QString questionCount READ questionCount NOTIFY newQuestionCount)
     Q_PROPERTY(QString timerText READ timerText NOTIFY newTimerText)
+    Q_PROPERTY(QString topScore READ topScore NOTIFY newTopScore)
+    Q_PROPERTY(QString topName READ topName NOTIFY newTopName)
 
 public:
     QQuizUIController(QQuizGameState *gameState, QObject *parent = 0);
@@ -29,6 +31,8 @@ public slots:
     QString questionText();
     QString questionCount();
     QString timerText();
+    QString topName();
+    QString topScore();
 
     void shawnPressed();
     void annePressed();
@@ -48,6 +52,8 @@ signals:
     void newQuestionText(QString questionText);
     void newQuestionCount(QString questionCount);
     void newTimerText(QString timerText);
+    void newTopScore(QString topScore);
+    void newTopName(QString topName);
 
 private:
     QString mPage;
@@ -57,6 +63,8 @@ private:
     QString mTimerText;
     QQuizButtonThread* mButtonThread;
     QQmlContext* mQmlContext;
+    QString mTopScore;
+    QString mTopName;
 
 };
 

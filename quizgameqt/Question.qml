@@ -9,7 +9,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: "#061275"
+        color: "#FFFFFF"
     }
 
     FontLoader {
@@ -31,10 +31,10 @@ Item {
         anchors.top: parent.top
         anchors.leftMargin: 5
         anchors.topMargin: 5
-        font.family: "Korinna"
+        //font.family: "Korinna"
         font.pointSize: 40
         font.capitalization: Font.AllUppercase
-        color: "#FFFFFF"
+        color: "#000000"
     }
 
     Text {
@@ -48,7 +48,7 @@ Item {
 
         font.family: "Segment7"
         font.pointSize: 50
-        color: "#FFFFFF"
+        color: "#000000"
     }
 
     Text {
@@ -62,7 +62,7 @@ Item {
 
         font.family: "DS-Digital"
         font.pointSize: 50
-        color: "#FFFFFF"
+        color: "#000000"
     }
 
     Text {
@@ -76,7 +76,7 @@ Item {
 
         font.family: "Segment7"
         font.pointSize: 50
-        color: "#FFFFFF"
+        color: "#000000"
     }
 
     Text {
@@ -88,9 +88,8 @@ Item {
         anchors.centerIn: parent
 
         font.capitalization: Font.AllUppercase
-        font.family: "Korinna"
         font.pointSize: 40
-        color: "#FFFFFF"
+        color: "#000000"
     }
 
     Button {

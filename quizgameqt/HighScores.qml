@@ -3,51 +3,21 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
 Item {
-    Rectangle {
-        anchors.fill: parent
-        color: "#FFFFFF"
-    }
-
-//    ListModel {
-//        id: myModel
-//        ListElement {
-//            rank: 1
-//            name: "Bill Smith"
-//            number: "555 3264"
-//        }
-//        ListElement {
-//            rank: 2
-//            name: "John Brown"
-//            number: "555 8426"
-//        }
-//        ListElement {
-//            rank: 3
-//            name: "Sam Wise"
-//            number: "555 0473"
-//        }
-//    }
+    Image {
+         id: background
+         anchors.fill: parent
+         source: "mrandmrs.jpg"
+         fillMode: Image.PreserveAspectCrop
+     }
 
     Text {
         id: highScoresText
-        text: "High Scores"
-
+        text: "Top Score: " + controller.topName + " (" + controller.topScore + "s)"
+        font.bold: true
+        font.pointSize: 40
         anchors.top: parent.top
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-    }
-
-    ListView {
-        anchors.top: highScoresText.bottom
-        //anchors.bottom: parent.bottom
-        anchors.topMargin: 10
-        anchors.bottom: playerNameGroup.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        model: resultsModel
-        delegate: Text {
-            text: name + ": " + parseInt(score)
-        }
     }
 
     ColumnLayout {
@@ -57,6 +27,8 @@ Item {
             text: "New Player: "
             anchors.verticalCenter: playerName.verticalCenter
             anchors.left: parent.left
+            font.bold: true
+            font.pointSize: 20
         }
 
         TextField {
@@ -74,7 +46,7 @@ Item {
 
         width: parent.width / 2
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
