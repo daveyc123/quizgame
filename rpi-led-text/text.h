@@ -37,6 +37,7 @@ public:
    */
   void Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap);
   void SetPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b);
+  void Clear();
   unsigned width() { return width_; };
   unsigned height() { return height_; };
   Pen last_pen;
@@ -52,7 +53,7 @@ private:
 
 class Font {
 public:
-  Font(char* fontpath, const FT_UInt fontsize) : fontpath_(fontpath), fontsize_(fontsize) {
+  Font(const char* fontpath, const FT_UInt fontsize) : fontpath_(fontpath), fontsize_(fontsize) {
   	InitCache_();
   }
 
@@ -64,7 +65,7 @@ private:
   FT_Library library_;
   FT_Face face_;
   RenderedChar char_cache_[256];
-  char* fontpath_;
+  const char* fontpath_;
   FT_UInt fontsize_;
 
   unsigned char* UnpackMonoBitmap_(FT_Bitmap* bitmap);
