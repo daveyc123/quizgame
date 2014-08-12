@@ -251,7 +251,7 @@ public:
   TextRenderer(RGBMatrix *m) : RGBMatrixManipulator(m) {}
 
   void Run() {
-    const char* text = "Woot! ";
+    const char* text = "Shawn & Anna & ";
     Font font("fonts/Oswald-Bold.ttf", 15);
     unsigned canvas_width = font.GetWidth(text);
     RGBCanvas canvas(canvas_width, matrix_->height());
@@ -259,7 +259,7 @@ public:
 
     font.PaintString(text, &canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
     while (running_) {
-      canvas.Display(matrix_, (i++ % canvas_width), 0, true, false);
+      canvas.Display(matrix_, (-i++ % canvas_width), 0, true, false);
       usleep(50000);
     }
   }
@@ -408,7 +408,6 @@ int main(int argc, char *argv[]) {
   RGBMatrix m(&io);
     
   RGBMatrixManipulator *image_gen = NULL;
-  LEDDisplay leddisp;
   switch (demo) {
   case 0:
     image_gen = new RotatingBlockGenerator(&m);
