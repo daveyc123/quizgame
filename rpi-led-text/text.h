@@ -57,9 +57,10 @@ public:
   	InitCache_();
   }
 
-  void PaintChar(RenderedChar* rchar, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
+  void PaintChar(const char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
   void PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
   unsigned GetWidth(const char* text);
+  unsigned GetWidth(const char c);
 
 private:
   FT_Library library_;
