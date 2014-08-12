@@ -26,3 +26,8 @@ Makefile*
 # QtCreator
 
 *.autosave
+
+# Ben added
+led-matrix
+*.DS_Store
+fttest
