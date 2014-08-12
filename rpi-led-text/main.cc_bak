@@ -251,7 +251,7 @@ public:
   TextRenderer(RGBMatrix *m) : RGBMatrixManipulator(m) {}
 
   void Run() {
-    const char* text = "Shawn & Anna & ";
+    const char* text = "Shawn & Anne & ";
     Font font("fonts/Oswald-Bold.ttf", 15);
     unsigned canvas_width = font.GetWidth(text);
     RGBCanvas canvas(canvas_width, matrix_->height());
@@ -271,25 +271,24 @@ public:
 
   void Run() {
     char buf['}' - ' ' + 2];
-    Font font("fonts/modernpics.otf", 16);
+    Font pictofont("fonts/modernpics.otf", 16);
+    Font font("fonts/Oswald-Bold.ttf", 15);
+    char index_str[8];
     char c;
     int i;
     unsigned canvas_width;
     RGBCanvas* canvas;
 
-    for (c=' ', i=0; c <= '}'; c++, i++) {
-      buf[i] = c;
-    }
-    buf[i] = NULL;
-
-    canvas_width = font.GetWidth(buf);
-    canvas = new RGBCanvas(canvas_width, matrix_->height());
-    font.PaintString(buf, canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
-
-    i = 0;
     while (running_) {
-      canvas->Display(matrix_, (i++ % canvas_width), 0, true, false);
-      usleep(50000);
+      for (c=' ', i=0; c <= '}' && running_; c++, i++) {
+        snprintf(index_str, sizeof(index_str), "%d", c);
+        buf[i] = c;
+        canvas = new RGBCanvas(matrix_->width(), matrix_->height());
+        font.PaintString(index_str, canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
+        pictofont.PaintChar(c, canvas, matrix_->width() / 2 + 1, matrix_->height() - 2, 0, 0xff, 0xff);
+        canvas->Display(matrix_, 0, 0, false, false);
+        usleep(700000);
+      }
     }
   }
 };
