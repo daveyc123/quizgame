@@ -8,5 +8,6 @@
         <file>timer.ttf</file>
         <file>timer2.otf</file>
         <file>mrandmrs.jpg</file>
+        <file>StartGameCountDown.qml</file>
     </qresource>
 </RCC>

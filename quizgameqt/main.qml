@@ -23,6 +23,11 @@ ApplicationWindow {
         Question {}
     }
 
+    Component {
+        id: startGameCountDownPage
+        StartGameCountDown {}
+    }
+
     Connections {
         target: controller
          // don't use eval, eh? well it converts an id to an object pretty nicely. if you read this and know a better way, hit me up at david.a.cummings@gmail.com

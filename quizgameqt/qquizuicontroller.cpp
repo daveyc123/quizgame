@@ -4,6 +4,7 @@
 
 #define PAGE_QUESTIONS "questionPage"
 #define PAGE_HIGH_SCORE "highScorePage"
+#define PAGE_START_GAME_COUNT_DOWN "startGameCountDownPage"
 
 /**
  * UI controller to manage the interactions between the model (C++)
@@ -57,7 +58,13 @@ QString QQuizUIController::page() {
 }
 
 void QQuizUIController::startNewGame(QString playerName) {
-    mGameState->startGame(playerName);
+    mPlayerName = playerName;
+    setPage(PAGE_START_GAME_COUNT_DOWN);
+    emit showCountDown();
+}
+
+void QQuizUIController::countDownFinished() {
+    mGameState->startGame(mPlayerName);
 }
 
 void QQuizUIController::onGameStarted() {
