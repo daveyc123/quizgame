@@ -112,7 +112,7 @@ Item {
 
     SoundEffect {
          id: correctAnswerSoundEffect
-         source: "file:///Users/dcummings/Downloads/ff-zero2.wav"
+         source: "file:///Users/dcummings/Downloads/beep-01a.wav"
          muted: false
          loops: SoundEffect.Infinite
          onPlayingChanged: {console.log("In theory I'm playing")}

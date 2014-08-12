@@ -28,6 +28,7 @@ public slots:
 
     void setPage(QString page);
     void startNewGame(QString playerName);
+    void countDownFinished();
     QString questionText();
     QString questionCount();
     QString timerText();
@@ -47,8 +48,10 @@ private slots:
     void onTimerFired(long time);
     void onButtonPressed(QString id);
 
+
 signals:
     void pageChanged(QString page);
+    void showCountDown();
     void newQuestionText(QString questionText);
     void newQuestionCount(QString questionCount);
     void newTimerText(QString timerText);
@@ -65,7 +68,7 @@ private:
     QQmlContext* mQmlContext;
     QString mTopScore;
     QString mTopName;
-
+    QString mPlayerName;
 };
 
 #endif // QQUIZUICONTROLLER_H
