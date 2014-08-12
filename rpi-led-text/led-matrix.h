@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include "gpio.h"
 
-#define DEBUG 1
+// #define DEBUG 1
 
 class RGBMatrix {
  public:
