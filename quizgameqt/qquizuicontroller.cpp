@@ -4,6 +4,7 @@
 
 #define PAGE_QUESTIONS "questionPage"
 #define PAGE_HIGH_SCORE "highScorePage"
+#define PAGE_START_GAME_COUNT_DOWN "startGameCountDownPage"
 
 /**
  * UI controller to manage the interactions between the model (C++)
@@ -57,7 +58,13 @@ QString QQuizUIController::page() {
 }
 
 void QQuizUIController::startNewGame(QString playerName) {
-    mGameState->startGame(playerName);
+    mPlayerName = playerName;
+    setPage(PAGE_START_GAME_COUNT_DOWN);
+    emit showCountDown();
+}
+
+void QQuizUIController::countDownFinished() {
+    mGameState->startGame(mPlayerName);
 }
 
 void QQuizUIController::onGameStarted() {
@@ -65,6 +72,13 @@ void QQuizUIController::onGameStarted() {
 }
 
 void QQuizUIController::onGameFinished() {
+    QList<QQuizResult *> results = mGameState->results()->getResults();
+    if (results.size() > 0) {
+        mTopScore.sprintf("%3.1f", ((float)results.at(0)->score())/1000.0);
+        mTopName = results.at(0)->name();
+        emit newTopScore(mTopScore);
+        emit newTopName(mTopName);
+    }
     setPage(PAGE_HIGH_SCORE);
 }
 
@@ -98,6 +112,14 @@ QString QQuizUIController::questionCount() {
 
 QString QQuizUIController::timerText() {
     return mTimerText;
+}
+
+QString QQuizUIController::topScore() {
+    return mTopScore;
+}
+
+QString QQuizUIController::topName() {
+    return mTopName;
 }
 
 void QQuizUIController::onButtonPressed(QString id) {
