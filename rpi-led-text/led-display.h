@@ -12,7 +12,7 @@ public:
     kRight,
     kCenter,
 
-    /* To duplicate the text across all panels - doesn't support scrolling */
+    /* To duplicate pictograms across all panels */
     kDupeLeft,
     kDupeRight,
     kDupeCenter
@@ -41,8 +41,14 @@ public:
   /* To map the X and checkmark icons from the picto font */
   void SetPictoXChar(char c);
   void SetPictoCheckmarkChar(char c);
+  void SetPictoHeartChar(char c);
 
   void DisplayString(char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type);
+  void DisplayFill();
+  void DisplayX(text_pos_t pos, text_scrolling_t scrolling);
+  void DisplayCheckmark(text_pos_t pos, text_scrolling_t scrolling);
+  void DisplayHeart(text_pos_t pos, text_scrolling_t scrolling);
+  void DisplayTimer(unsigned ms);
 
   void SetScrollInterval(unsigned usec); /* The smaller the interval, the faster the scrolling */
 
@@ -57,6 +63,7 @@ protected:
   Font* picto_font;
   volatile char picto_x;
   volatile char picto_checkmark;
+  volatile char picto_heart;
   RGBCanvas* canvas_;
   RGBCanvas* next_canvas_; /* Used for transitions */
   volatile unsigned char r_;
@@ -71,4 +78,6 @@ protected:
 
 private:
   GPIO* io;
+
+  void DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrolling);
 };

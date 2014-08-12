@@ -1,6 +1,8 @@
 #include "led-display.h"
 #include "led-matrix.h"
 
+#include <unistd.h>
+
 // Base-class for a Thread that does something with a matrix.
 class RGBMatrixManipulator : public Thread {
 public:
@@ -45,9 +47,10 @@ LEDDisplay::LEDDisplay()
 
   SetVariableFont("fonts/Oswald-Bold.ttf", 15);
   SetMonoFont("fonts/UbuntuMono-Bold.ttf", 17);
-  SetPictoFont("fonts/modernpics.otf", 16);
-  SetPictoXChar(56);
-  SetPictoCheckmarkChar(68);
+  SetPictoFont("fonts/modernpics.otf", 18);
+  SetPictoXChar(88);
+  SetPictoCheckmarkChar(37);
+  SetPictoHeartChar(106);
   SetScrollInterval(50000);
   SetRGB(0xff, 0, 0);
 
@@ -102,14 +105,14 @@ void LEDDisplay::Run()
 #endif
     }
 
-    if (canvas_ != NULL || next_canvas_ != NULL) {
+    if (next_canvas_ != NULL) {
       /* Animation sequence changed (ex: new string), reinit */
       int x_offset;
       i = 0;
       j = 0;
 
       if (canvas_) {
-        free((void*)canvas_);
+        delete canvas_;
       }
       canvas_ = next_canvas_;
       next_canvas_ = NULL;
@@ -163,6 +166,10 @@ void LEDDisplay::Run()
     }
 
     canvas_->Display(matrix_, (i % canvas_->width()), (j % canvas_->width()), x_scroll, y_scroll);
+
+    if (scrolling_type_ != kNoScroll) {
+    	usleep(scrolling_interval_);
+    }
   }
 
   delete updater;
@@ -192,6 +199,11 @@ void LEDDisplay::SetPictoXChar(char c)
 void LEDDisplay::SetPictoCheckmarkChar(char c)
 {
   picto_checkmark = c;
+}
+
+void LEDDisplay::SetPictoHeartChar(char c)
+{
+  picto_heart = c;
 }
 
 void LEDDisplay::DisplayString(char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type)
@@ -225,6 +237,129 @@ void LEDDisplay::DisplayString(char* text, text_pos_t pos, text_scrolling_t scro
   next_canvas_ = canvas;
   scrolling_type_ = scrolling;
   text_pos_ = pos;
+
+  if (!started_) {
+  	Start();
+  }
+
+  pthread_cond_broadcast(&cond);
+  pthread_mutex_unlock(&mutex);
+}
+
+void LEDDisplay::DisplayFill()
+{
+  int i;
+  int j;
+  RGBCanvas* canvas;
+
+  canvas = new RGBCanvas(matrix_->width(), matrix_->height());
+  for (i = 0; i < matrix_->width(); i++) {
+  	for (j = 0; j < matrix_->height(); j++) {
+  	  canvas->SetPixel(i, j, r_, g_, b_);
+    }
+  }
+
+  pthread_mutex_lock(&mutex);
+  next_canvas_ = canvas;
+
+  /* Having to set these is a hack, but works for now. */
+  scrolling_type_ = kNoScroll;
+  text_pos_ = kLeft;
+
+  if (!started_) {
+  	Start();
+  }
+
+  pthread_cond_broadcast(&cond);
+  pthread_mutex_unlock(&mutex);
+}
+
+void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrolling)
+{
+  RGBCanvas* canvas;
+  int x;
+  unsigned picto_width = picto_font->GetWidth(c);
+
+  canvas = new RGBCanvas(matrix_->width(), matrix_->height());
+
+  switch (pos) {
+  	case kLeft:
+  	  x = 0;
+  	  break;
+  	case kRight:
+  	  x = matrix_->width() - picto_width;
+  	  break;
+  	case kCenter:
+  	  x = matrix_->width() / 2 - picto_width / 2;
+  	  break;
+  	case kDupeLeft:
+  	  x = 0;
+  	  break;
+  	case kDupeRight:
+  	  x = matrix_->width() / 2 - picto_width;
+  	  break;
+  	case kDupeCenter:
+  	  x = matrix_->width() / 4 - picto_width / 2;
+  	  break;
+  }
+
+  picto_font->PaintChar(c, canvas, x, matrix_->height() - 2, r_, g_, b_);
+  if (pos == kDupeLeft || pos == kDupeRight || pos == kDupeCenter) {
+  	picto_font->PaintChar(c, canvas, x + matrix_->width() / 2, matrix_->height() - 2, r_, g_, b_);
+  }
+
+  pthread_mutex_lock(&mutex);
+  next_canvas_ = canvas;
+  scrolling_type_ = scrolling;
+  text_pos_ = kLeft; /* Positioning is handled in the canvas */
+
+  if (!started_) {
+  	Start();
+  }
+
+  pthread_cond_broadcast(&cond);
+  pthread_mutex_unlock(&mutex);
+}
+
+void LEDDisplay::DisplayX(text_pos_t pos, text_scrolling_t scrolling)
+{
+  DisplayPicto_(picto_x, pos, scrolling);
+}
+
+void LEDDisplay::DisplayCheckmark(text_pos_t pos, text_scrolling_t scrolling)
+{
+  DisplayPicto_(picto_checkmark, pos, scrolling);
+}
+
+void LEDDisplay::DisplayHeart(text_pos_t pos, text_scrolling_t scrolling)
+{
+  DisplayPicto_(picto_heart, pos, scrolling);
+}
+
+void LEDDisplay::DisplayTimer(unsigned ms)
+{
+  RGBCanvas* canvas = new RGBCanvas(matrix_->width(), matrix_->height());
+  unsigned minutes;
+  unsigned seconds;
+  unsigned tenthsofseconds;
+  unsigned remainder;
+  char timestr[16];
+
+  minutes = ms / 60000;
+  remainder = ms % 60000;
+  seconds = remainder / 1000;
+  remainder = remainder % 1000;
+  tenthsofseconds = remainder / 100;
+  snprintf(timestr, sizeof(timestr), "%02d:%02d.%d", minutes, seconds, tenthsofseconds);
+
+  mono_font->PaintString(timestr, canvas, 1, matrix_->height() - 2, r_, g_, b_);
+
+  pthread_mutex_lock(&mutex);
+  next_canvas_ = canvas;
+
+  /* Having to set these is a hack, but works for now. */
+  scrolling_type_ = kNoScroll;
+  text_pos_ = kLeft;
 
   if (!started_) {
   	Start();
