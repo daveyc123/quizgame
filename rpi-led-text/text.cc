@@ -83,8 +83,9 @@ void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, b
   }
 }
 
-void Font::PaintChar(RenderedChar* rchar, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
+void Font::PaintChar(char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
 {
+    RenderedChar* rchar = &char_cache_[c];
     FT_Int i, j, p, q;
     FT_Int x = pen_x + rchar->bitmap_left;
     FT_Int y = pen_y - rchar->bitmap_top;
@@ -125,8 +126,8 @@ void Font::PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y
   }
 
   while (c = *text++) {
+    PaintChar(c, canvas, pen_x, pen_y, r, g, b);
     rchar = &char_cache_[c];
-    PaintChar(rchar, canvas, pen_x, pen_y, r, g, b);
     pen_x += rchar->advance_x;
     pen_y += rchar->advance_y;
 
@@ -152,6 +153,11 @@ unsigned Font::GetWidth(const char* text)
   }
 
   return width;
+}
+
+unsigned Font::GetWidth(const char c)
+{
+  return char_cache_[c].advance_x;
 }
 
 unsigned char* Font::UnpackMonoBitmap_(FT_Bitmap* bitmap)
