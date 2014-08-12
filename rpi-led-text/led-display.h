@@ -43,6 +43,9 @@ public:
   void SetPictoCheckmarkChar(char c);
   void SetPictoHeartChar(char c);
 
+  /* Used to shrink down the white space used by the '.' and ':' chars in the timer */
+  void SetTimerPunctuationWidth(unsigned width);
+
   void DisplayString(char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type);
   void DisplayFill();
   void DisplayX(text_pos_t pos, text_scrolling_t scrolling);
@@ -54,8 +57,8 @@ public:
 
   void SetRGB(unsigned char r, unsigned char g, unsigned char b);
 
-  RGBMatrix* matrix_; // Temporary - should be protected
 protected:
+  RGBMatrix* matrix_;
   volatile bool running_;  // TODO: use mutex, but this is good enough for now.
   volatile bool started_;
   Font* variable_font;
@@ -75,6 +78,8 @@ protected:
   volatile text_pos_t text_pos_;
   pthread_mutex_t mutex;
   pthread_cond_t cond;
+
+  unsigned timer_punctuation_width_;
 
 private:
   GPIO* io;

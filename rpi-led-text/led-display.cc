@@ -51,6 +51,7 @@ LEDDisplay::LEDDisplay()
   SetPictoXChar(88);
   SetPictoCheckmarkChar(37);
   SetPictoHeartChar(106);
+  SetTimerPunctuationWidth(6);
   SetScrollInterval(50000);
   SetRGB(0xff, 0, 0);
 
@@ -206,6 +207,11 @@ void LEDDisplay::SetPictoHeartChar(char c)
   picto_heart = c;
 }
 
+void LEDDisplay::SetTimerPunctuationWidth(unsigned width)
+{
+  timer_punctuation_width_ = width;
+}
+
 void LEDDisplay::DisplayString(char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type)
 {
   Font* font;
@@ -344,15 +350,28 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   unsigned tenthsofseconds;
   unsigned remainder;
   char timestr[16];
+  unsigned punctuation_correction;
 
   minutes = ms / 60000;
   remainder = ms % 60000;
   seconds = remainder / 1000;
   remainder = remainder % 1000;
   tenthsofseconds = remainder / 100;
-  snprintf(timestr, sizeof(timestr), "%02d:%02d.%d", minutes, seconds, tenthsofseconds);
+  punctuation_correction = (mono_font->GetWidth(':') - timer_punctuation_width_) / 2;
 
+  /* Minutes */
+  snprintf(timestr, sizeof(timestr), "%02d", minutes);
   mono_font->PaintString(timestr, canvas, 1, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(":", canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+
+  /* Seconds */
+  snprintf(timestr, sizeof(timestr), "%02d", seconds);
+  mono_font->PaintString(timestr, canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(".", canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+
+  /* 1/10th of seconds */
+  snprintf(timestr, sizeof(timestr), "%d", tenthsofseconds);
+  mono_font->PaintString(timestr, canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
 
   pthread_mutex_lock(&mutex);
   next_canvas_ = canvas;
