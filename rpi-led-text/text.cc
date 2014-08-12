@@ -33,6 +33,11 @@ void RGBCanvas::SetPixel(int x, int y, unsigned char r, unsigned char g, unsigne
   pixel->b = b;
 }
 
+void RGBCanvas::Clear()
+{
+  memset(pixbuf_, 0, width_ * height_ * sizeof(*pixbuf_));
+}
+
 void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap)
 {
   int i; /* x position on the display */
@@ -70,6 +75,8 @@ void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, b
         }
       }
 
+      pix_j %= height_;
+      pix_i %= width_;
       Pixel* pixel = &pixbuf_[pix_j * width_ + pix_i];
       m->SetPixel(i, j, pixel->r, pixel->g, pixel->b);
     }
