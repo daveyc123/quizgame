@@ -75,6 +75,8 @@ void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, b
         }
       }
 
+      pix_j %= height_;
+      pix_i %= width_;
       Pixel* pixel = &pixbuf_[pix_j * width_ + pix_i];
       m->SetPixel(i, j, pixel->r, pixel->g, pixel->b);
     }
