@@ -28,6 +28,7 @@ void leddisplay_demo(LEDDisplay* leddisp)
     leddisp->DisplayString("Shawn & Anne & ", LEDDisplay::kLeft, LEDDisplay::kUpScroll, LEDDisplay::kVariable);
     sleep(3);
 
+    leddisp->SetRGB(0xff, 0, 0);
     printf("Left\n");
     leddisp->DisplayString("L", LEDDisplay::kLeft, LEDDisplay::kNoScroll, LEDDisplay::kVariable);
     sleep(1);
@@ -97,6 +98,33 @@ void leddisplay_demo(LEDDisplay* leddisp)
   }
 }
 
+void canvas_invert_demo(LEDDisplay* leddisp)
+{
+  const char* str = "Winning!";
+  unsigned str_width;
+  Font font("fonts/Oswald-Bold.ttf", 15);
+  RGBCanvas* canvases[2];
+  Pen pen;
+  unsigned char r = 0;
+  unsigned char g = 0xff;
+  unsigned char b = 0;
+  int i = 0;
+
+  str_width = font.GetWidth(str);
+  pen.x = leddisp->GetWidth() / 2 - str_width / 2;
+  pen.y = leddisp->GetHeight() - 2;
+  canvases[0] = new RGBCanvas(leddisp->GetWidth(), leddisp->GetHeight());
+  canvases[1] = new RGBCanvas(leddisp->GetWidth(), leddisp->GetHeight());
+  font.PaintString(str, canvases[0], &pen, r, g, b);
+  canvases[1]->Fill(r, g, b);
+  font.PaintString(str, canvases[1], &pen, 0, 0, 0);
+
+  while (1) {
+    leddisp->SwapCanvas(canvases[i++ % 2], LEDDisplay::kLeft, LEDDisplay::kNoScroll, false);
+    usleep(200000);
+  }
+}
+
 void canvas_picto_demo(LEDDisplay* leddisp)
 {
   Font pictofont("fonts/modernpics.otf", 16);
@@ -135,10 +163,14 @@ int main(int argc, char *argv[]) {
     break;
 
   case 1:
-    canvas_picto_demo(leddisp);
+    canvas_invert_demo(leddisp);
     break;
 
   case 2:
+    canvas_picto_demo(leddisp);
+    break;
+
+  case 3:
     delete leddisp;
     return 0;
 
