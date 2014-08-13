@@ -38,14 +38,14 @@ public:
   void Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap);
   void SetPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b);
   void Clear();
-  unsigned width() { return width_; };
-  unsigned height() { return height_; };
+  int width() { return width_; };
+  int height() { return height_; };
   Pen last_pen;
 
 private:
   Pixel* pixbuf_;
-  unsigned width_;
-  unsigned height_;
+  int width_;
+  int height_;
 
   void InitCanvas_();
 

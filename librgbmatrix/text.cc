@@ -85,7 +85,7 @@ void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, b
 
 void Font::PaintChar(char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
 {
-    RenderedChar* rchar = &char_cache_[c];
+    RenderedChar* rchar = &char_cache_[(unsigned char)c];
     FT_Int i, j, p, q;
     FT_Int x = pen_x + rchar->bitmap_left;
     FT_Int y = pen_y - rchar->bitmap_top;
@@ -114,20 +114,16 @@ void Font::PaintChar(char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned c
 
 void Font::PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
 {
-  FT_Int i, j, p, q;
   RenderedChar* rchar;
-  FT_Int x_max;
-  FT_Int y_max;
-  unsigned char pix;
   char c;
 
   if (text == NULL) {
     return;
   }
 
-  while (c = *text++) {
+  while ((c = *text++)) {
     PaintChar(c, canvas, pen_x, pen_y, r, g, b);
-    rchar = &char_cache_[c];
+    rchar = &char_cache_[(unsigned char)c];
     pen_x += rchar->advance_x;
     pen_y += rchar->advance_y;
 
@@ -147,8 +143,8 @@ unsigned Font::GetWidth(const char* text)
     return 0;
   }
 
-  while (c = *text++) {
-    rchar = &char_cache_[c];
+  while ((c = *text++)) {
+    rchar = &char_cache_[(unsigned char)c];
     width += rchar->advance_x;
   }
 
@@ -157,13 +153,13 @@ unsigned Font::GetWidth(const char* text)
 
 unsigned Font::GetWidth(const char c)
 {
-  return char_cache_[c].advance_x;
+  return char_cache_[(unsigned char)c].advance_x;
 }
 
 unsigned char* Font::UnpackMonoBitmap_(FT_Bitmap* bitmap)
 {
   unsigned char* result;
-  int y, x, byte_index, num_bits_done, rowstart, bits, bit_index;
+  int y, byte_index, num_bits_done, rowstart, bits, bit_index;
   unsigned char byte_value;
   
   result = (unsigned char*)malloc(bitmap->rows * bitmap->width);
@@ -198,12 +194,6 @@ void Font::RenderAndCache_(unsigned char val)
   FT_Error error;
 
   // printf("Rendering %d (%c)\n", val, val);
-
-  // Currently only support caching ASCII chars
-  if (val > 255) {
-    fprintf(stderr, "Don't support caching non-ASCII characters\n");
-    return;
-  }
 
   glyph_index = FT_Get_Char_Index(face_, val);
   if (glyph_index == 0) {
@@ -244,7 +234,6 @@ void Font::RenderAndCache_(unsigned char val)
 void Font::InitCache_()
 {
   unsigned i;
-  FT_GlyphSlot slot;
   FT_Error error;
 
   error = FT_Init_FreeType(&library_);
