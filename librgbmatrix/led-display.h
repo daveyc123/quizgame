@@ -52,6 +52,7 @@ public:
   void DisplayCheckmark(text_pos_t pos, text_scrolling_t scrolling);
   void DisplayHeart(text_pos_t pos, text_scrolling_t scrolling);
   void DisplayTimer(unsigned ms);
+  void DisplayClear();
 
   void SetScrollInterval(unsigned usec); /* The smaller the interval, the faster the scrolling */
 
