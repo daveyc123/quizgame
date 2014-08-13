@@ -3,6 +3,9 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#ifndef __TEXT_H
+#define __TEXT_H
+
 struct RenderedChar {
   FT_Int width;
   FT_Int rows;
@@ -73,3 +76,5 @@ private:
   void RenderAndCache_(unsigned char val);
   void InitCache_();
 };
+
+#endif
