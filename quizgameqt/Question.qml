@@ -12,26 +12,14 @@ Item {
         color: "#FFFFFF"
     }
 
-    FontLoader {
-        source: "jeopardy.ttf"
-    }
-
-    FontLoader {
-        source: "timer2.otf"
-    }
-
-    FontLoader {
-        source: "timer.ttf"
-    }
-
     Text {
         id: questionCount
-        text: qsTr("Question ") + controller.questionCount
+        text: qsTr("Question ") + controller.questionCount + "/10"
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.leftMargin: 5
-        anchors.topMargin: 5
-        //font.family: "Korinna"
+        anchors.leftMargin: 20
+        anchors.topMargin: 20
+        font.family: "Rockwell"
         font.pointSize: 40
         font.capitalization: Font.AllUppercase
         color: "#000000"
@@ -44,7 +32,7 @@ Item {
         anchors.right: timerPeriod.right
         anchors.top: parent.top
         anchors.rightMargin: 5
-        anchors.topMargin: 8
+        anchors.topMargin: 23
 
         font.family: "Segment7"
         font.pointSize: 50
@@ -58,7 +46,7 @@ Item {
         anchors.right: timerRight.left
         anchors.top: parent.top
         anchors.rightMargin: 5
-        anchors.topMargin: 8
+        anchors.topMargin: 23
 
         font.family: "DS-Digital"
         font.pointSize: 50
@@ -71,8 +59,8 @@ Item {
 
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.rightMargin: 5
-        anchors.topMargin: 8
+        anchors.rightMargin: 20
+        anchors.topMargin: 23
 
         font.family: "Segment7"
         font.pointSize: 50
@@ -87,25 +75,26 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
 
-        font.capitalization: Font.AllUppercase
-        font.pointSize: 40
+        font.pointSize: 75
+        font.family: "Rockwell"
         color: "#000000"
     }
 
-    Button {
-        text: "Anne"
-        onClicked: {correctAnswerSoundEffect.play(); controller.annePressed(); console.log(correctAnswerSoundEffect.status == SoundEffect.Ready); console.log(correctAnswerSoundEffect.volume)}
-        anchors.bottom : parent.bottom
+    Image {
+        id: mrsImage
+        source: "mrs.png"
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.bottomMargin: 20
         anchors.leftMargin: 20
+
     }
 
-    Button {
-        text: "Shawn"
-        onClicked: controller.shawnPressed();
-        anchors.right: parent.right;
-        anchors.bottom : parent.bottom;
+    Image {
+        id: mrImage
+        source: "mr.png"
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
         anchors.bottomMargin: 20
         anchors.rightMargin: 20
     }
@@ -116,6 +105,18 @@ Item {
          muted: false
          loops: SoundEffect.Infinite
          onPlayingChanged: {console.log("In theory I'm playing")}
+    }
+
+    FontLoader {
+        source: "rockwell.ttf"
+    }
+
+    FontLoader {
+        source: "timer2.otf"
+    }
+
+    FontLoader {
+        source: "timer.ttf"
     }
 
 //    Audio {
