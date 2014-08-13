@@ -34,6 +34,9 @@ public:
 
   void Run(); // Run() implementation needs to check running_ regularly.
 
+  unsigned GetWidth() { return matrix_->width(); };
+  unsigned GetHeight() { return matrix_->height(); };
+
   void SetVariableFont(const char* path, unsigned sz);
   void SetMonoFont(const char* path, unsigned sz);
   void SetPictoFont(const char* path, unsigned sz);
@@ -42,6 +45,9 @@ public:
   void SetPictoXChar(char c);
   void SetPictoCheckmarkChar(char c);
   void SetPictoHeartChar(char c);
+
+  void SetScrollInterval(unsigned usec); /* The smaller the interval, the faster the scrolling */
+  void SetRGB(unsigned char r, unsigned char g, unsigned char b);
 
   /* Used to shrink down the white space used by the '.' and ':' chars in the timer */
   void SetTimerPunctuationWidth(unsigned width);
@@ -53,10 +59,7 @@ public:
   void DisplayHeart(text_pos_t pos, text_scrolling_t scrolling);
   void DisplayTimer(unsigned ms);
   void DisplayClear();
-
-  void SetScrollInterval(unsigned usec); /* The smaller the interval, the faster the scrolling */
-
-  void SetRGB(unsigned char r, unsigned char g, unsigned char b);
+  void SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling);
 
 protected:
   RGBMatrix* matrix_;
