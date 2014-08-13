@@ -15,17 +15,10 @@ using std::max;
 
 int main(int argc, char *argv[]) {
   int demo = 0;
-  int sleep_time = 3;
   LEDDisplay* leddisp = new LEDDisplay();
 
   if (argc > 1) {
     demo = atoi(argv[1]);
-    if (argc > 2) {
-      sleep_time = atoi(argv[2]);
-      if (sleep_time <= 0) {
-        sleep_time = 3;
-      }
-    }
   }
   fprintf(stderr, "Using demo %d\n", demo);
 
@@ -37,11 +30,23 @@ int main(int argc, char *argv[]) {
 
       printf("Left scroll\n");
       leddisp->DisplayString("Shawn & Anne & ", LEDDisplay::kLeft, LEDDisplay::kLeftScroll, LEDDisplay::kVariable);
-      sleep(sleep_time);
+      sleep(3);
 
       printf("Up scroll\n");
       leddisp->DisplayString("Shawn & Anne & ", LEDDisplay::kLeft, LEDDisplay::kUpScroll, LEDDisplay::kVariable);
-      sleep(sleep_time);
+      sleep(3);
+
+      printf("Left\n");
+      leddisp->DisplayString("L", LEDDisplay::kLeft, LEDDisplay::kNoScroll, LEDDisplay::kVariable);
+      sleep(1);
+
+      printf("Right\n");
+      leddisp->DisplayString("R", LEDDisplay::kRight, LEDDisplay::kNoScroll, LEDDisplay::kVariable);
+      sleep(1);
+
+      printf("Center\n");
+      leddisp->DisplayString("C", LEDDisplay::kCenter, LEDDisplay::kNoScroll, LEDDisplay::kVariable);
+      sleep(1);
 
       printf("Timer\n");
       leddisp->SetRGB(0, 0, 0xff);
@@ -70,7 +75,9 @@ int main(int argc, char *argv[]) {
       sleep(2);
       leddisp->DisplayX(LEDDisplay::kCenter, LEDDisplay::kNoScroll);
       sleep(2);
-      leddisp->SetRGB(0, 0xff, 0xff);
+      leddisp->SetRGB(0, 0xff, 0);
+      leddisp->DisplayCheckmark(LEDDisplay::kLeft, LEDDisplay::kRightScroll);
+      sleep(2);
 
       printf("Display fill\n");
       leddisp->SetRGB(0xff, 0, 0);

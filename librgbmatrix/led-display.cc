@@ -81,8 +81,9 @@ void LEDDisplay::Run()
 {
   unsigned i = 0;
   unsigned j = 0;
-  bool x_scroll;
-  bool y_scroll;
+  int x_offset = 0;
+  bool x_scroll = false;
+  bool y_scroll = false;
 
   pthread_mutex_lock(&mutex);
   started_ = 1;
@@ -108,7 +109,6 @@ void LEDDisplay::Run()
 
     if (next_canvas_ != NULL) {
       /* Animation sequence changed (ex: new string), reinit */
-      int x_offset;
       i = 0;
       j = 0;
 
@@ -118,23 +118,26 @@ void LEDDisplay::Run()
       canvas_ = next_canvas_;
       next_canvas_ = NULL;
 
-	  switch (text_pos_) {
-	    case kLeft:
-	    case kDupeLeft:
-	      x_offset = 1;
-	      break;
-	    case kRight:
-	    case kDupeRight:
-	      x_offset = matrix_->width() - canvas_->width() - 1;
-	      break;
-	    case kCenter:
-	    case kDupeCenter:
-	      x_offset = (matrix_->width() / 2) - (canvas_->width() / 2);
-	      break;
-	    default:
-	      fprintf(stderr, "Unknown text position\n");
-	      break;
-	  }
+      /* We need to clear the screen in case the incoming canvas is smaller than the old one */
+      matrix_->ClearScreen();
+
+  	  switch (text_pos_) {
+  	    case kLeft:
+  	    case kDupeLeft:
+  	      x_offset = 0;
+  	      break;
+  	    case kRight:
+  	    case kDupeRight:
+  	      x_offset = matrix_->width() - canvas_->width();
+  	      break;
+  	    case kCenter:
+  	    case kDupeCenter:
+  	      x_offset = (matrix_->width() / 2) - (canvas_->width() / 2);
+  	      break;
+  	    default:
+  	      fprintf(stderr, "Unknown text position\n");
+  	      break;
+  	  }
     }
 
     pthread_mutex_unlock(&mutex);
@@ -166,7 +169,7 @@ void LEDDisplay::Run()
         break;
     }
 
-    canvas_->Display(matrix_, (i % canvas_->width()), (j % canvas_->width()), x_scroll, y_scroll);
+    canvas_->Display(matrix_, x_offset + (i % canvas_->width()), (j % canvas_->width()), x_scroll, y_scroll);
 
     if (scrolling_type_ != kNoScroll) {
     	usleep(scrolling_interval_);
@@ -212,13 +215,11 @@ void LEDDisplay::SetTimerPunctuationWidth(unsigned width)
   timer_punctuation_width_ = width;
 }
 
-void LEDDisplay::DisplayString(char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type)
+void LEDDisplay::DisplayString(const char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type)
 {
   Font* font;
   RGBCanvas* canvas;
   unsigned canvas_width;
-  int x;
-  int y;
 
   switch (font_type) {
   	case kVariable:
@@ -282,8 +283,8 @@ void LEDDisplay::DisplayFill()
 
 void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrolling)
 {
+  int x = 0;
   RGBCanvas* canvas;
-  int x;
   unsigned picto_width = picto_font->GetWidth(c);
 
   canvas = new RGBCanvas(matrix_->width(), matrix_->height());

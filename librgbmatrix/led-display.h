@@ -46,7 +46,7 @@ public:
   /* Used to shrink down the white space used by the '.' and ':' chars in the timer */
   void SetTimerPunctuationWidth(unsigned width);
 
-  void DisplayString(char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type);
+  void DisplayString(const char* text, text_pos_t pos, text_scrolling_t scrolling, text_font_type_t font_type);
   void DisplayFill();
   void DisplayX(text_pos_t pos, text_scrolling_t scrolling);
   void DisplayCheckmark(text_pos_t pos, text_scrolling_t scrolling);
