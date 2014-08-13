@@ -102,7 +102,7 @@ void canvas_invert_demo(LEDDisplay* leddisp)
 {
   const char* str = "Winning!";
   unsigned str_width;
-  Font font("fonts/Oswald-Bold.ttf", 15);
+  Font font("Oswald-Bold.ttf", 15);
   RGBCanvas* canvases[2];
   Pen pen;
   unsigned char r = 0;
@@ -127,8 +127,8 @@ void canvas_invert_demo(LEDDisplay* leddisp)
 
 void canvas_picto_demo(LEDDisplay* leddisp)
 {
-  Font pictofont("fonts/modernpics.otf", 16);
-  Font font("fonts/Oswald-Bold.ttf", 15);
+  Font pictofont("modernpics.otf", 16);
+  Font font("Oswald-Bold.ttf", 15);
   char index_str[8];
   char c;
   int i;

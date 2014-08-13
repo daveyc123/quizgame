@@ -1,5 +1,9 @@
 #include "text.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 struct Pixel {
   unsigned char r;
   unsigned char g;
@@ -239,6 +243,37 @@ unsigned char* Font::UnpackMonoBitmap_(FT_Bitmap* bitmap)
   }
   
   return result;
+}
+
+char* Font::PathLookup_(const char* fontname)
+{
+  const char* lookup[] = {
+    "fonts",
+    "/usr/local/share/fonts",
+    "/usr/share/fonts"
+  };
+  int i, rc;
+  char path[256];
+  struct stat statbuf;
+
+  for (i = 0; i < sizeof(lookup) / sizeof(*lookup); i++) {
+    snprintf(path, sizeof(path), "%s/%s", lookup[i], fontname);
+    rc = stat(path, &statbuf);
+    if (rc == 0) {
+#ifdef DEBUG
+      printf("Found font: %s\n", path);
+#endif
+      return strdup(path);
+    } else {
+#ifdef DEBUG
+      printf("No font: %s\n", path);
+#endif
+      continue;
+    }
+  }
+
+  fprintf(stderr, "Couldn't find font: %s\n", fontname);
+  return NULL;
 }
 
 void Font::RenderAndCache_(unsigned char val)

@@ -57,7 +57,8 @@ private:
 
 class Font {
 public:
-  Font(const char* fontpath, const FT_UInt fontsize) : fontpath_(fontpath), fontsize_(fontsize) {
+  Font(const char* fontname, const FT_UInt fontsize) : fontsize_(fontsize) {
+    fontpath_ = PathLookup_(fontname);
   	InitCache_();
   }
 
@@ -75,6 +76,7 @@ private:
   const char* fontpath_;
   FT_UInt fontsize_;
 
+  char* PathLookup_(const char* fontname);
   unsigned char* UnpackMonoBitmap_(FT_Bitmap* bitmap);
   void RenderAndCache_(unsigned char val);
   void InitCache_();
