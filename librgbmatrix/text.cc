@@ -33,6 +33,22 @@ void RGBCanvas::SetPixel(int x, int y, unsigned char r, unsigned char g, unsigne
   pixel->b = b;
 }
 
+void RGBCanvas::Fill(unsigned char r, unsigned char g, unsigned char b)
+{
+  int i;
+  int j;
+  Pixel* pixel = NULL;
+
+  for (i = 0; i < width_; i++) {
+    for (j = 0; j < height_; j++) {
+      pixel = &pixbuf_[(j * width_) + i];
+      pixel->r = r;
+      pixel->g = g;
+      pixel->b = b;
+    }
+  }
+}
+
 void RGBCanvas::Clear()
 {
   memset(pixbuf_, 0, width_ * height_ * sizeof(*pixbuf_));
@@ -117,7 +133,9 @@ void Font::PaintChar(char c, RGBCanvas* canvas, Pen* pen, unsigned char r, unsig
         }
 
         char_pixel = rchar->buf[q * rchar->width + p];
-        canvas->SetPixel(i, j, char_pixel ? r : 0, char_pixel ? g : 0, char_pixel ? b : 0);
+        if (char_pixel) {
+          canvas->SetPixel(i, j, r, g, b);
+        }
       }
     }
 

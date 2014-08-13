@@ -40,6 +40,7 @@ public:
    */
   void Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, bool y_wrap);
   void SetPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b);
+  void Fill(unsigned char r, unsigned char g, unsigned char b);
   void Clear();
   unsigned width() { return width_; };
   unsigned height() { return height_; };
