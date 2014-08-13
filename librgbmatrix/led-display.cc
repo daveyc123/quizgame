@@ -45,9 +45,9 @@ LEDDisplay::LEDDisplay()
   	return;
   }
 
-  SetVariableFont("fonts/Oswald-Bold.ttf", 15);
-  SetMonoFont("fonts/UbuntuMono-Bold.ttf", 17);
-  SetPictoFont("fonts/modernpics.otf", 18);
+  SetVariableFont("Oswald-Bold.ttf", 15);
+  SetMonoFont("UbuntuMono-Bold.ttf", 17);
+  SetPictoFont("modernpics.otf", 18);
   SetPictoXChar(88);
   SetPictoCheckmarkChar(37);
   SetPictoHeartChar(106);
