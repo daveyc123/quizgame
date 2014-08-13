@@ -9,5 +9,8 @@
         <file>timer2.otf</file>
         <file>mrandmrs.jpg</file>
         <file>StartGameCountDown.qml</file>
+        <file>rockwell.ttf</file>
+        <file>mr.png</file>
+        <file>mrs.png</file>
     </qresource>
 </RCC>

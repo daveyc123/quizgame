@@ -11,7 +11,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: "#FFFFFF"
+        color: "#000000"
     }
 
     Timer {
@@ -19,7 +19,7 @@ Item {
         interval: 1000
         running: false
         repeat: true
-        onTriggered: {
+        onTriggered: {            
             if (--counter == 0) {
                 timer.running = false;
                 controller.countDownFinished();
@@ -31,10 +31,28 @@ Item {
         id: countDownText
         text: counter
         anchors.centerIn: parent
-        font.pointSize: 300
+        font.pointSize: 1000
         font.bold: true
+        color: "#FFFFFF"
         font.capitalization: Font.AllUppercase
-        color: "#000000"
+        font.family: "Rockwell"
+        opacity: 0
+
+        NumberAnimation on opacity {
+            id: fadeInAnimation
+            from: 0
+            to: 1
+            duration: 1000
+            loops: 3
+        }
+
+        Component.onCompleted: {
+            fadeInAnimation.start();
+        }
+    }
+
+    FontLoader {
+        source: "rockwell.ttf"
     }
 
     Connections {
