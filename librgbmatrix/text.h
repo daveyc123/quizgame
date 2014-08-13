@@ -60,10 +60,12 @@ public:
   	InitCache_();
   }
 
-  void PaintChar(const char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
-  void PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b);
+  void PaintChar(const char c, RGBCanvas* canvas, Pen* pen, unsigned char r, unsigned char g, unsigned char b);
+  void PaintString(const char* text, RGBCanvas* canvas, Pen* pen, unsigned char r, unsigned char g, unsigned char b);
   unsigned GetWidth(const char* text);
   unsigned GetWidth(const char c);
+  unsigned GetHeight(const char* text); /* Note that this returns the height from the baseline */
+  unsigned GetHeight(const char c); /* This returns the height irrespective of the baseline */
 
 private:
   FT_Library library_;

@@ -220,6 +220,7 @@ void LEDDisplay::DisplayString(const char* text, text_pos_t pos, text_scrolling_
   Font* font;
   RGBCanvas* canvas;
   unsigned canvas_width;
+  Pen pen;
 
   switch (font_type) {
   	case kVariable:
@@ -239,7 +240,9 @@ void LEDDisplay::DisplayString(const char* text, text_pos_t pos, text_scrolling_
   canvas_width = font->GetWidth(text);
   canvas = new RGBCanvas(canvas_width, matrix_->height());
 
-  font->PaintString(text, canvas, 1, matrix_->height() - 2, r_, g_, b_);
+  pen.x = 1;
+  pen.y = matrix_->height() - 2;
+  font->PaintString(text, canvas, &pen, r_, g_, b_);
   SwapCanvas(canvas, pos, scrolling);
 }
 
@@ -261,36 +264,37 @@ void LEDDisplay::DisplayFill()
 
 void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrolling)
 {
-  int x = 0;
   RGBCanvas* canvas;
   unsigned picto_width = picto_font->GetWidth(c);
+  Pen pen = {0, (int)(matrix_->height() / 2 + picto_font->GetHeight(c) / 2)};
 
   canvas = new RGBCanvas(matrix_->width(), matrix_->height());
 
   switch (pos) {
-  	case kLeft:
-  	  x = 0;
-  	  break;
-  	case kRight:
-  	  x = matrix_->width() - picto_width;
-  	  break;
-  	case kCenter:
-  	  x = matrix_->width() / 2 - picto_width / 2;
-  	  break;
-  	case kDupeLeft:
-  	  x = 0;
-  	  break;
-  	case kDupeRight:
-  	  x = matrix_->width() / 2 - picto_width;
-  	  break;
-  	case kDupeCenter:
-  	  x = matrix_->width() / 4 - picto_width / 2;
-  	  break;
+    case kLeft:
+      pen.x = 0;
+      break;
+    case kRight:
+      pen.x = matrix_->width() - picto_width;
+      break;
+    case kCenter:
+      pen.x = matrix_->width() / 2 - picto_width / 2;
+      break;
+    case kDupeLeft:
+      pen.x = 0;
+      break;
+    case kDupeRight:
+      pen.x = matrix_->width() / 2 - picto_width;
+      break;
+    case kDupeCenter:
+      pen.x = matrix_->width() / 4 - picto_width / 2;
+      break;
   }
 
-  picto_font->PaintChar(c, canvas, x, matrix_->height() - 2, r_, g_, b_);
+  picto_font->PaintChar(c, canvas, &pen, r_, g_, b_);
   if (pos == kDupeLeft || pos == kDupeRight || pos == kDupeCenter) {
-  	picto_font->PaintChar(c, canvas, x + matrix_->width() / 2, matrix_->height() - 2, r_, g_, b_);
+    pen.x += matrix_->width() / 2;
+    picto_font->PaintChar(c, canvas, &pen, r_, g_, b_);
   }
 
   SwapCanvas(canvas, kLeft, scrolling);
@@ -320,6 +324,7 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   unsigned remainder;
   char timestr[16];
   unsigned punctuation_correction;
+  Pen pen;
 
   minutes = ms / 60000;
   remainder = ms % 60000;
@@ -328,19 +333,26 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   tenthsofseconds = remainder / 100;
   punctuation_correction = (mono_font->GetWidth(':') - timer_punctuation_width_) / 2;
 
+  pen.x = 1;
+  pen.y = matrix_->height() - 2;
+
   /* Minutes */
   snprintf(timestr, sizeof(timestr), "%02d", minutes);
-  mono_font->PaintString(timestr, canvas, 1, matrix_->height() - 2, r_, g_, b_);
-  mono_font->PaintString(":", canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(timestr, canvas, &pen, r_, g_, b_);
+  canvas->pen.x -= punctuation_correction;
+  mono_font->PaintString(":", canvas, NULL, r_, g_, b_);
+  canvas->pen.x -= punctuation_correction;
 
   /* Seconds */
   snprintf(timestr, sizeof(timestr), "%02d", seconds);
-  mono_font->PaintString(timestr, canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
-  mono_font->PaintString(".", canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(timestr, canvas, NULL, r_, g_, b_);
+  canvas->pen.x -= punctuation_correction;
+  mono_font->PaintString(".", canvas, NULL, r_, g_, b_);
+  canvas->pen.x -= punctuation_correction;
 
   /* 1/10th of seconds */
   snprintf(timestr, sizeof(timestr), "%d", tenthsofseconds);
-  mono_font->PaintString(timestr, canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(timestr, canvas, NULL, r_, g_, b_);
 
   SwapCanvas(canvas, kLeft, kNoScroll);
 }

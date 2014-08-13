@@ -83,18 +83,28 @@ void RGBCanvas::Display(RGBMatrix* m, int x_offset, int y_offset, bool x_wrap, b
   }
 }
 
-void Font::PaintChar(char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
+void Font::PaintChar(char c, RGBCanvas* canvas, Pen* pen, unsigned char r, unsigned char g, unsigned char b)
 {
-    RenderedChar* rchar = &char_cache_[(unsigned char)c];
     FT_Int i, j, p, q;
-    FT_Int x = pen_x + rchar->bitmap_left;
-    FT_Int y = pen_y - rchar->bitmap_top;
-    FT_Int x_max = x + rchar->width;
-    FT_Int y_max = y + rchar->rows;
+    FT_Int x, y, x_max, y_max;
     unsigned char char_pixel;
+    RenderedChar* rchar = &char_cache_[(unsigned char)c];
+
+    if (canvas == NULL) {
+      return;
+    }
+
+    if (pen == NULL) {
+      pen = &canvas->pen;
+    }
+
+    x = pen->x + rchar->bitmap_left;
+    y = pen->y - rchar->bitmap_top;
+    x_max = x + rchar->width;
+    y_max = y + rchar->rows;
 
 // #ifdef DEBUG
-//     printf("DEBUG: pen_x = %d, pen_y = %d, x = %d, y = %d\n", pen_x, pen_y, x, y);
+//     printf("DEBUG: pen->x = %d, pen->y = %d, x = %d, y = %d\n", pen->x, pen->y, x, y);
 // #endif
 
     for (i = x, p = 0; i < x_max; i++, p++) {
@@ -111,22 +121,25 @@ void Font::PaintChar(char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned c
       }
     }
 
-    canvas->pen.x = pen_x + rchar->advance_x;
-    canvas->pen.y = pen_y + rchar->advance_y;
+    canvas->pen.x = pen->x + rchar->advance_x;
+    canvas->pen.y = pen->y + rchar->advance_y;
 }
 
-void Font::PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
+void Font::PaintString(const char* text, RGBCanvas* canvas, Pen* pen, unsigned char r, unsigned char g, unsigned char b)
 {
   char c;
 
-  if (text == NULL) {
+  if (text == NULL || canvas == NULL) {
     return;
   }
 
-  canvas->pen.x = pen_x;
-  canvas->pen.y = pen_y;
+  if (pen != NULL) {
+    canvas->pen.x = pen->x;
+    canvas->pen.y = pen->y;
+  }
+
   while ((c = *text++)) {
-    PaintChar(c, canvas, canvas->pen.x, canvas->pen.y, r, g, b);
+    PaintChar(c, canvas, NULL, r, g, b);
   }
 }
 
@@ -151,6 +164,33 @@ unsigned Font::GetWidth(const char* text)
 unsigned Font::GetWidth(const char c)
 {
   return char_cache_[(unsigned char)c].advance_x;
+}
+
+unsigned Font::GetHeight(const char* text)
+{
+  char c;
+  RenderedChar* rchar;
+  unsigned height = 0;
+  unsigned max_height = 0;
+
+  if (text == NULL) {
+    return 0;
+  }
+
+  while ((c = *text++)) {
+    rchar = &char_cache_[(unsigned char)c];
+    height = rchar->rows - rchar->bitmap_top;
+    if (height > max_height) {
+      max_height = height;
+    }
+  }
+
+  return max_height;
+}
+
+unsigned Font::GetHeight(const char c)
+{
+  return char_cache_[(unsigned char)c].rows;
 }
 
 unsigned char* Font::UnpackMonoBitmap_(FT_Bitmap* bitmap)
