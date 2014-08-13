@@ -255,9 +255,10 @@ public:
     Font font("fonts/Oswald-Bold.ttf", 15);
     unsigned canvas_width = font.GetWidth(text);
     RGBCanvas canvas(canvas_width, matrix_->height());
+    Pen pen = {1, matrix_->height() - 2};
     int i = 0;
 
-    font.PaintString(text, &canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
+    font.PaintString(text, &canvas, &pen, 0xff, 0, 0);
     while (running_) {
       canvas.Display(matrix_, (-i++ % canvas_width), 0, true, false);
       usleep(50000);
@@ -270,22 +271,21 @@ public:
   Pictograms(RGBMatrix *m) : RGBMatrixManipulator(m) {}
 
   void Run() {
-    char buf['}' - ' ' + 2];
     Font pictofont("fonts/modernpics.otf", 16);
     Font font("fonts/Oswald-Bold.ttf", 15);
     char index_str[8];
     char c;
     int i;
-    unsigned canvas_width;
     RGBCanvas* canvas;
+    Pen num_pen = {1, matrix_->height() - 2};
+    Pen picto_pen = {matrix_->width() / 2 + 1, matrix_->height() - 2};
 
     while (running_) {
       for (c=' ', i=0; c <= '}' && running_; c++, i++) {
         snprintf(index_str, sizeof(index_str), "%d", c);
-        buf[i] = c;
         canvas = new RGBCanvas(matrix_->width(), matrix_->height());
-        font.PaintString(index_str, canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
-        pictofont.PaintChar(c, canvas, matrix_->width() / 2 + 1, matrix_->height() - 2, 0, 0xff, 0xff);
+        font.PaintString(index_str, canvas, &num_pen, 0xff, 0, 0);
+        pictofont.PaintChar(c, canvas, &picto_pen, 0, 0xff, 0xff);
         canvas->Display(matrix_, 0, 0, false, false);
         usleep(700000);
       }
@@ -311,6 +311,7 @@ public:
     unsigned tenthsofseconds;
     unsigned remainder;
     char timestr[16];
+    Pen pen = {1, matrix_->height() - 2};
 
     clock_gettime(CLOCK_MONOTONIC, &start_ts);
     start_ns = start_ts.tv_sec * 1e9;
@@ -327,7 +328,7 @@ public:
       tenthsofseconds = remainder / 100;
       snprintf(timestr, sizeof(timestr), "%02d:%02d.%d", minutes, seconds, tenthsofseconds);
       canvas.Clear();
-      font.PaintString(timestr, &canvas, 1, matrix_->height() - 2, 0xff, 0, 0);
+      font.PaintString(timestr, &canvas, &pen, 0xff, 0, 0);
       canvas.Display(matrix_, (matrix_->width() / 2) - (canvas_width / 2), 0, false, false);
       usleep(100000);
     }

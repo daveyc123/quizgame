@@ -105,13 +105,15 @@ void canvas_picto_demo(LEDDisplay* leddisp)
   char c;
   int i;
   RGBCanvas* canvas;
+  Pen num_pen = {1, (int)(leddisp->GetHeight() - 2)};
+  Pen picto_pen = {(int)(leddisp->GetWidth() / 2 + 1), (int)(leddisp->GetHeight() - 2)};
 
   while (1) {
     for (c=' ', i=0; c <= '}'; c++, i++) {
       snprintf(index_str, sizeof(index_str), "%d", c);
       canvas = new RGBCanvas(leddisp->GetWidth(), leddisp->GetHeight());
-      font.PaintString(index_str, canvas, 1, leddisp->GetHeight() - 2, 0xff, 0, 0);
-      pictofont.PaintChar(c, canvas, leddisp->GetWidth() / 2 + 1, leddisp->GetHeight() - 2, 0, 0xff, 0xff);
+      font.PaintString(index_str, canvas, &num_pen, 0xff, 0, 0);
+      pictofont.PaintChar(c, canvas, &picto_pen, 0, 0xff, 0xff);
       leddisp->SwapCanvas(canvas, LEDDisplay::kLeft, LEDDisplay::kNoScroll);
       usleep(700000);
     }
