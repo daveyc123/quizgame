@@ -65,12 +65,12 @@ protected:
   RGBMatrix* matrix_;
   volatile bool running_;  // TODO: use mutex, but this is good enough for now.
   volatile bool started_;
-  Font* variable_font;
-  Font* mono_font;
-  Font* picto_font;
-  volatile char picto_x;
-  volatile char picto_checkmark;
-  volatile char picto_heart;
+  Font* variable_font_;
+  Font* mono_font_;
+  Font* picto_font_;
+  volatile char picto_x_;
+  volatile char picto_checkmark_;
+  volatile char picto_heart_;
   RGBCanvas* canvas_;
   RGBCanvas* next_canvas_; /* Used for transitions */
   volatile unsigned char r_;
@@ -80,8 +80,8 @@ protected:
   volatile unsigned scrolling_interval_;
   volatile text_scrolling_t scrolling_type_;
   volatile text_pos_t text_pos_;
-  pthread_mutex_t mutex;
-  pthread_cond_t cond;
+  pthread_mutex_t mutex_;
+  pthread_cond_t cond_;
 
   unsigned timer_punctuation_width_;
 
