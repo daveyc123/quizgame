@@ -389,6 +389,25 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   pthread_mutex_unlock(&mutex);
 }
 
+void LEDDisplay::DisplayClear()
+{
+  RGBCanvas* canvas = new RGBCanvas(matrix_->width(), matrix_->height());
+
+  pthread_mutex_lock(&mutex);
+  next_canvas_ = canvas;
+
+  /* Having to set these is a hack, but works for now. */
+  scrolling_type_ = kNoScroll;
+  text_pos_ = kLeft;
+
+  if (!started_) {
+    Start();
+  }
+
+  pthread_cond_broadcast(&cond);
+  pthread_mutex_unlock(&mutex);
+}
+
 void LEDDisplay::SetScrollInterval(unsigned usec)
 {
   scrolling_interval_ = usec;
