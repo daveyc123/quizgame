@@ -331,16 +331,16 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   /* Minutes */
   snprintf(timestr, sizeof(timestr), "%02d", minutes);
   mono_font->PaintString(timestr, canvas, 1, matrix_->height() - 2, r_, g_, b_);
-  mono_font->PaintString(":", canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(":", canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
 
   /* Seconds */
   snprintf(timestr, sizeof(timestr), "%02d", seconds);
-  mono_font->PaintString(timestr, canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
-  mono_font->PaintString(".", canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(timestr, canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(".", canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
 
   /* 1/10th of seconds */
   snprintf(timestr, sizeof(timestr), "%d", tenthsofseconds);
-  mono_font->PaintString(timestr, canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
+  mono_font->PaintString(timestr, canvas, canvas->pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
 
   SwapCanvas(canvas, kLeft, kNoScroll);
 }

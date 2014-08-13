@@ -43,7 +43,7 @@ public:
   void Clear();
   unsigned width() { return width_; };
   unsigned height() { return height_; };
-  Pen last_pen;
+  Pen pen;
 
 private:
   Pixel* pixbuf_;
