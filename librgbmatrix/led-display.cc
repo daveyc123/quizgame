@@ -60,6 +60,7 @@ LEDDisplay::LEDDisplay()
 
   canvas_ = NULL;
   next_canvas_ = NULL;
+  free_canvas_ = true;
 
   running_ = true;
 }
@@ -112,7 +113,7 @@ void LEDDisplay::Run()
       i = 0;
       j = 0;
 
-      if (canvas_) {
+      if (canvas_ && canvas_ != next_canvas_ && free_canvas_) {
         delete canvas_;
       }
       canvas_ = next_canvas_;
@@ -248,17 +249,10 @@ void LEDDisplay::DisplayString(const char* text, text_pos_t pos, text_scrolling_
 
 void LEDDisplay::DisplayFill()
 {
-  int i;
-  int j;
   RGBCanvas* canvas;
 
   canvas = new RGBCanvas(matrix_->width(), matrix_->height());
-  for (i = 0; i < matrix_->width(); i++) {
-  	for (j = 0; j < matrix_->height(); j++) {
-  	  canvas->SetPixel(i, j, r_, g_, b_);
-    }
-  }
-
+  canvas->Fill(r_, g_, b_);
   SwapCanvas(canvas, kLeft, kNoScroll);
 }
 
@@ -363,12 +357,13 @@ void LEDDisplay::DisplayClear()
   SwapCanvas(canvas, kLeft, kNoScroll);
 }
 
-void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling)
+void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling, bool free)
 {
   pthread_mutex_lock(&mutex_);
   next_canvas_ = canvas;
   text_pos_ = pos;
   scrolling_type_ = scrolling;
+  free_canvas_ = free;
 
   if (!started_) {
     Start();
@@ -376,6 +371,11 @@ void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t 
 
   pthread_cond_broadcast(&cond_);
   pthread_mutex_unlock(&mutex_);
+}
+
+void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling)
+{
+  SwapCanvas(canvas, pos, scrolling, true);
 }
 
 void LEDDisplay::SetScrollInterval(unsigned usec)

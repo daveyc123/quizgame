@@ -59,6 +59,7 @@ public:
   void DisplayHeart(text_pos_t pos, text_scrolling_t scrolling);
   void DisplayTimer(unsigned ms);
   void DisplayClear();
+  void SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling, bool free);
   void SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling);
 
 protected:
@@ -73,6 +74,7 @@ protected:
   volatile char picto_heart_;
   RGBCanvas* canvas_;
   RGBCanvas* next_canvas_; /* Used for transitions */
+  bool free_canvas_;
   volatile unsigned char r_;
   volatile unsigned char g_;
   volatile unsigned char b_;
