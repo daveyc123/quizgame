@@ -240,17 +240,7 @@ void LEDDisplay::DisplayString(const char* text, text_pos_t pos, text_scrolling_
   canvas = new RGBCanvas(canvas_width, matrix_->height());
 
   font->PaintString(text, canvas, 1, matrix_->height() - 2, r_, g_, b_);
-  pthread_mutex_lock(&mutex);
-  next_canvas_ = canvas;
-  scrolling_type_ = scrolling;
-  text_pos_ = pos;
-
-  if (!started_) {
-  	Start();
-  }
-
-  pthread_cond_broadcast(&cond);
-  pthread_mutex_unlock(&mutex);
+  SwapCanvas(canvas, pos, scrolling);
 }
 
 void LEDDisplay::DisplayFill()
@@ -266,19 +256,7 @@ void LEDDisplay::DisplayFill()
     }
   }
 
-  pthread_mutex_lock(&mutex);
-  next_canvas_ = canvas;
-
-  /* Having to set these is a hack, but works for now. */
-  scrolling_type_ = kNoScroll;
-  text_pos_ = kLeft;
-
-  if (!started_) {
-  	Start();
-  }
-
-  pthread_cond_broadcast(&cond);
-  pthread_mutex_unlock(&mutex);
+  SwapCanvas(canvas, kLeft, kNoScroll);
 }
 
 void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrolling)
@@ -315,17 +293,7 @@ void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrollin
   	picto_font->PaintChar(c, canvas, x + matrix_->width() / 2, matrix_->height() - 2, r_, g_, b_);
   }
 
-  pthread_mutex_lock(&mutex);
-  next_canvas_ = canvas;
-  scrolling_type_ = scrolling;
-  text_pos_ = kLeft; /* Positioning is handled in the canvas */
-
-  if (!started_) {
-  	Start();
-  }
-
-  pthread_cond_broadcast(&cond);
-  pthread_mutex_unlock(&mutex);
+  SwapCanvas(canvas, kLeft, scrolling);
 }
 
 void LEDDisplay::DisplayX(text_pos_t pos, text_scrolling_t scrolling)
@@ -374,31 +342,21 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   snprintf(timestr, sizeof(timestr), "%d", tenthsofseconds);
   mono_font->PaintString(timestr, canvas, canvas->last_pen.x - punctuation_correction, matrix_->height() - 2, r_, g_, b_);
 
-  pthread_mutex_lock(&mutex);
-  next_canvas_ = canvas;
-
-  /* Having to set these is a hack, but works for now. */
-  scrolling_type_ = kNoScroll;
-  text_pos_ = kLeft;
-
-  if (!started_) {
-  	Start();
-  }
-
-  pthread_cond_broadcast(&cond);
-  pthread_mutex_unlock(&mutex);
+  SwapCanvas(canvas, kLeft, kNoScroll);
 }
 
 void LEDDisplay::DisplayClear()
 {
   RGBCanvas* canvas = new RGBCanvas(matrix_->width(), matrix_->height());
+  SwapCanvas(canvas, kLeft, kNoScroll);
+}
 
+void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling)
+{
   pthread_mutex_lock(&mutex);
   next_canvas_ = canvas;
-
-  /* Having to set these is a hack, but works for now. */
-  scrolling_type_ = kNoScroll;
-  text_pos_ = kLeft;
+  text_pos_ = pos;
+  scrolling_type_ = scrolling;
 
   if (!started_) {
     Start();
