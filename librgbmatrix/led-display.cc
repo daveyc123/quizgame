@@ -55,8 +55,8 @@ LEDDisplay::LEDDisplay()
   SetScrollInterval(50000);
   SetRGB(0xff, 0, 0);
 
-  pthread_mutex_init(&mutex, NULL);
-  pthread_cond_init(&cond, NULL);
+  pthread_mutex_init(&mutex_, NULL);
+  pthread_cond_init(&cond_, NULL);
 
   canvas_ = NULL;
   next_canvas_ = NULL;
@@ -66,10 +66,10 @@ LEDDisplay::LEDDisplay()
 
 LEDDisplay::~LEDDisplay()
 {
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_lock(&mutex_);
   running_ = false;
-  pthread_cond_broadcast(&cond);
-  pthread_mutex_unlock(&mutex);
+  pthread_cond_broadcast(&cond_);
+  pthread_mutex_unlock(&mutex_);
 
   // Final thing before exit: clear screen and update once, so that
   // we don't have random pixels burn
@@ -85,15 +85,15 @@ void LEDDisplay::Run()
   bool x_scroll = false;
   bool y_scroll = false;
 
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_lock(&mutex_);
   started_ = 1;
-  pthread_mutex_unlock(&mutex);
+  pthread_mutex_unlock(&mutex_);
 
   RGBMatrixManipulator *updater = new DisplayUpdater(matrix_);
   updater->Start(10);  // high priority
 
   while (running_) {
-  	pthread_mutex_lock(&mutex);
+  	pthread_mutex_lock(&mutex_);
     while (true) {
   	  if (scrolling_type_ != kNoScroll || next_canvas_ != NULL || !running_) {
   	    break;
@@ -101,7 +101,7 @@ void LEDDisplay::Run()
 #ifdef DEBUG
       printf("LEDDisplay blocking\n");
 #endif
-      pthread_cond_wait(&cond, &mutex);
+      pthread_cond_wait(&cond_, &mutex_);
 #ifdef DEBUG
       printf("LEDDisplay unblocking\n");
 #endif
@@ -140,7 +140,7 @@ void LEDDisplay::Run()
   	  }
     }
 
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&mutex_);
 
     switch (scrolling_type_) {
       case kNoScroll:
@@ -181,33 +181,33 @@ void LEDDisplay::Run()
 
 void LEDDisplay::SetVariableFont(const char* path, unsigned sz)
 {
-  variable_font = new Font(path, sz);
+  variable_font_ = new Font(path, sz);
 }
 
 void LEDDisplay::SetMonoFont(const char* path, unsigned sz)
 {
-  mono_font = new Font(path, sz);
+  mono_font_ = new Font(path, sz);
 }
 
 void LEDDisplay::SetPictoFont(const char* path, unsigned sz)
 {
-  picto_font = new Font(path, sz);
+  picto_font_ = new Font(path, sz);
 }
 
 
 void LEDDisplay::SetPictoXChar(char c)
 {
-  picto_x = c;
+  picto_x_ = c;
 }
 
 void LEDDisplay::SetPictoCheckmarkChar(char c)
 {
-  picto_checkmark = c;
+  picto_checkmark_ = c;
 }
 
 void LEDDisplay::SetPictoHeartChar(char c)
 {
-  picto_heart = c;
+  picto_heart_ = c;
 }
 
 void LEDDisplay::SetTimerPunctuationWidth(unsigned width)
@@ -224,13 +224,13 @@ void LEDDisplay::DisplayString(const char* text, text_pos_t pos, text_scrolling_
 
   switch (font_type) {
   	case kVariable:
-  	  font = variable_font;
+  	  font = variable_font_;
   	  break;
   	case kMono:
-  	  font = mono_font;
+  	  font = mono_font_;
   	  break;
   	case kPicto:
-  	  font = picto_font;
+  	  font = picto_font_;
   	  break;
   	default:
   	  fprintf(stderr, "Unknown font type\n");
@@ -265,8 +265,8 @@ void LEDDisplay::DisplayFill()
 void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrolling)
 {
   RGBCanvas* canvas;
-  unsigned picto_width = picto_font->GetWidth(c);
-  Pen pen = {0, (int)(matrix_->height() / 2 + picto_font->GetHeight(c) / 2)};
+  unsigned picto_width = picto_font_->GetWidth(c);
+  Pen pen = {0, (int)(matrix_->height() / 2 + picto_font_->GetHeight(c) / 2)};
 
   canvas = new RGBCanvas(matrix_->width(), matrix_->height());
 
@@ -291,10 +291,10 @@ void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrollin
       break;
   }
 
-  picto_font->PaintChar(c, canvas, &pen, r_, g_, b_);
+  picto_font_->PaintChar(c, canvas, &pen, r_, g_, b_);
   if (pos == kDupeLeft || pos == kDupeRight || pos == kDupeCenter) {
     pen.x += matrix_->width() / 2;
-    picto_font->PaintChar(c, canvas, &pen, r_, g_, b_);
+    picto_font_->PaintChar(c, canvas, &pen, r_, g_, b_);
   }
 
   SwapCanvas(canvas, kLeft, scrolling);
@@ -302,17 +302,17 @@ void LEDDisplay::DisplayPicto_(char c, text_pos_t pos, text_scrolling_t scrollin
 
 void LEDDisplay::DisplayX(text_pos_t pos, text_scrolling_t scrolling)
 {
-  DisplayPicto_(picto_x, pos, scrolling);
+  DisplayPicto_(picto_x_, pos, scrolling);
 }
 
 void LEDDisplay::DisplayCheckmark(text_pos_t pos, text_scrolling_t scrolling)
 {
-  DisplayPicto_(picto_checkmark, pos, scrolling);
+  DisplayPicto_(picto_checkmark_, pos, scrolling);
 }
 
 void LEDDisplay::DisplayHeart(text_pos_t pos, text_scrolling_t scrolling)
 {
-  DisplayPicto_(picto_heart, pos, scrolling);
+  DisplayPicto_(picto_heart_, pos, scrolling);
 }
 
 void LEDDisplay::DisplayTimer(unsigned ms)
@@ -331,28 +331,28 @@ void LEDDisplay::DisplayTimer(unsigned ms)
   seconds = remainder / 1000;
   remainder = remainder % 1000;
   tenthsofseconds = remainder / 100;
-  punctuation_correction = (mono_font->GetWidth(':') - timer_punctuation_width_) / 2;
+  punctuation_correction = (mono_font_->GetWidth(':') - timer_punctuation_width_) / 2;
 
   pen.x = 1;
   pen.y = matrix_->height() - 2;
 
   /* Minutes */
   snprintf(timestr, sizeof(timestr), "%02d", minutes);
-  mono_font->PaintString(timestr, canvas, &pen, r_, g_, b_);
+  mono_font_->PaintString(timestr, canvas, &pen, r_, g_, b_);
   canvas->pen.x -= punctuation_correction;
-  mono_font->PaintString(":", canvas, NULL, r_, g_, b_);
+  mono_font_->PaintString(":", canvas, NULL, r_, g_, b_);
   canvas->pen.x -= punctuation_correction;
 
   /* Seconds */
   snprintf(timestr, sizeof(timestr), "%02d", seconds);
-  mono_font->PaintString(timestr, canvas, NULL, r_, g_, b_);
+  mono_font_->PaintString(timestr, canvas, NULL, r_, g_, b_);
   canvas->pen.x -= punctuation_correction;
-  mono_font->PaintString(".", canvas, NULL, r_, g_, b_);
+  mono_font_->PaintString(".", canvas, NULL, r_, g_, b_);
   canvas->pen.x -= punctuation_correction;
 
   /* 1/10th of seconds */
   snprintf(timestr, sizeof(timestr), "%d", tenthsofseconds);
-  mono_font->PaintString(timestr, canvas, NULL, r_, g_, b_);
+  mono_font_->PaintString(timestr, canvas, NULL, r_, g_, b_);
 
   SwapCanvas(canvas, kLeft, kNoScroll);
 }
@@ -365,7 +365,7 @@ void LEDDisplay::DisplayClear()
 
 void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t scrolling)
 {
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_lock(&mutex_);
   next_canvas_ = canvas;
   text_pos_ = pos;
   scrolling_type_ = scrolling;
@@ -374,8 +374,8 @@ void LEDDisplay::SwapCanvas(RGBCanvas* canvas, text_pos_t pos, text_scrolling_t 
     Start();
   }
 
-  pthread_cond_broadcast(&cond);
-  pthread_mutex_unlock(&mutex);
+  pthread_cond_broadcast(&cond_);
+  pthread_mutex_unlock(&mutex_);
 }
 
 void LEDDisplay::SetScrollInterval(unsigned usec)
