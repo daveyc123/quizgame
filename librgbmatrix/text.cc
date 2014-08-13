@@ -110,26 +110,23 @@ void Font::PaintChar(char c, RGBCanvas* canvas, int pen_x, int pen_y, unsigned c
         canvas->SetPixel(i, j, char_pixel ? r : 0, char_pixel ? g : 0, char_pixel ? b : 0);
       }
     }
+
+    canvas->pen.x = pen_x + rchar->advance_x;
+    canvas->pen.y = pen_y + rchar->advance_y;
 }
 
 void Font::PaintString(const char* text, RGBCanvas* canvas, int pen_x, int pen_y, unsigned char r, unsigned char g, unsigned char b)
 {
-  RenderedChar* rchar;
   char c;
 
   if (text == NULL) {
     return;
   }
 
+  canvas->pen.x = pen_x;
+  canvas->pen.y = pen_y;
   while ((c = *text++)) {
-    PaintChar(c, canvas, pen_x, pen_y, r, g, b);
-    rchar = &char_cache_[(unsigned char)c];
-    pen_x += rchar->advance_x;
-    pen_y += rchar->advance_y;
-
-    // Set last_pen past the current character to be able to easily chain strings
-    canvas->last_pen.x = pen_x;
-    canvas->last_pen.y = pen_y;
+    PaintChar(c, canvas, canvas->pen.x, canvas->pen.y, r, g, b);
   }
 }
 
