@@ -15,11 +15,11 @@ public slots:
     void clearScores();
 
 public:
-    void addResult(QQuizResult *);
+    int addResult(QQuizResult *);
 
 private:
     void serialize();
-    void addResult(QQuizResult *, bool);
+    int addResult(QQuizResult *, bool);
 private:
     QList<QQuizResult*> mResults;
     QString mResultsFile;

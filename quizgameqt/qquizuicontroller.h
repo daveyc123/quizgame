@@ -41,7 +41,7 @@ public slots:
 private slots:
     void onGameStarted();
     void onNewQuestion(QuizQuestion* question, int questionCount);
-    void onGameFinished();
+    void onGameFinished(int rank);
     void onTimerFired(long time);
     void onButtonPressed(QString id);
 

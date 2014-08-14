@@ -42,19 +42,24 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
     }
 }
 
-void QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
+int QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
+    int rank = 0;
     if (mResults.size() == 0) {
         mResults.append(result);
+        rank = 1;
     } else {
         for (int i=0; i<mResults.size(); i++) {
             if (i==0 && mResults[i]->score() > result->score()) {
                 mResults.insert(0, result);
+                rank = 1;
                 break;
             } else if (i==(mResults.size() - 1)) {
                 mResults.append(result);
+                rank = mResults.size();
                 break;
             } else if (result->score() > mResults[i]->score() && result->score() < mResults[i+1]->score()) {
                 mResults.insert(i+1, result);
+                rank = i + 1;
                 break;
             }
         }
@@ -63,10 +68,12 @@ void QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
     if (shouldSerialize) {
         serialize(); // save in case we crash
     }
+
+    return rank;
 }
 
-void QQuizResults::addResult(QQuizResult *result) {
-   addResult(result, true);
+int QQuizResults::addResult(QQuizResult *result) {
+   return addResult(result, true);
 }
 
 QList<QQuizResult*> QQuizResults::getResults() {

@@ -31,7 +31,7 @@ Item {
         id: countDownText
         text: counter
         anchors.centerIn: parent
-        font.pointSize: 1000
+        font.pointSize: 800
         font.bold: true
         color: "#FFFFFF"
         font.capitalization: Font.AllUppercase

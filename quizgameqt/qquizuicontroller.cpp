@@ -51,6 +51,7 @@ QString QQuizUIController::page() {
 void QQuizUIController::startNewGame(QString playerName) {
     mPlayerName = playerName;
     setPage(PAGE_START_GAME_COUNT_DOWN);
+    mGameState->startGameCountdown(playerName);
     emit showCountDown();
 }
 
@@ -62,7 +63,7 @@ void QQuizUIController::onGameStarted() {
     setPage(PAGE_QUESTIONS);
 }
 
-void QQuizUIController::onGameFinished() {
+void QQuizUIController::onGameFinished(int rank) {
     QList<QQuizResult *> results = mGameState->results()->getResults();
     if (results.size() > 0) {
         mTopScore.sprintf("%3.1f", ((float)results.at(0)->score())/1000.0);
