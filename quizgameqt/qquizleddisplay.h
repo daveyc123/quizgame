@@ -39,9 +39,8 @@ private slots:
     void onWrongAnswerPartTwo();
     void onGameStartedPartTwo();
     void onGameStartedPartThree();
-
-private:
     void showBannerText();
+
 
 private:
     QQuizGameState *mGameState;

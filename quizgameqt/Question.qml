@@ -75,7 +75,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
 
-        font.pointSize: 75
+        font.pointSize: 65
         font.family: "Rockwell"
         color: "#000000"
     }
