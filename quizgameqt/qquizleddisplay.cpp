@@ -8,6 +8,7 @@ QQuizLedDisplay::QQuizLedDisplay(QQuizGameState *gameState, QObject *parent) :
     mLedDisplay = new LEDDisplay();
 
     QObject::connect(gameState, &QQuizGameState::gameStarted, this, &QQuizLedDisplay::onGameStarted);
+    QObject::connect(gameState, &QQuizGameState::gameCountdownStarted, this, &QQuizLedDisplay::onGameCountdownStarted);
     QObject::connect(gameState, &QQuizGameState::newQuestion, this, &QQuizLedDisplay::onNewQuestion);
     QObject::connect(gameState, &QQuizGameState::gameFinished, this, &QQuizLedDisplay::onGameFinished);
     QObject::connect(gameState, &QQuizGameState::wrongAnswer, this, &QQuizLedDisplay::onWrongAnswer);
@@ -22,14 +23,34 @@ QQuizLedDisplay::~QQuizLedDisplay() {
 }
 
 void QQuizLedDisplay::onGameStarted() {
-    mAllowTimerUpdates = true;
-    mLedDisplay->SetRGB(0, 0xff, 0xff);
+    enableTimerUpdates();
 }
 
-void QQuizLedDisplay::onGameFinished() {
-    mLedDisplay->DisplayClear();
-    mAllowTimerUpdates = true;
-    showBannerText();
+void QQuizLedDisplay::onGameCountdownStarted() {
+    mAllowTimerUpdates = false;
+    mLedDisplay->SetRGB(0xff, 0xff, 0x00);
+    mLedDisplay->DisplayString("GOOD", LEDDisplay::kCenter, LEDDisplay::kDownScroll, LEDDisplay::kVariable);
+    QTimer::singleShot(1000, this, SLOT(onGameStartedPartTwo()));
+}
+
+void QQuizLedDisplay::onGameStartedPartTwo() {
+    mLedDisplay->SetRGB(0xff, 0x33, 0x0);
+    mLedDisplay->DisplayString("LUCK", LEDDisplay::kCenter, LEDDisplay::kUpScroll, LEDDisplay::kVariable);
+    QTimer::singleShot(1000, this, SLOT(onGameStartedPartThree()));
+}
+
+void QQuizLedDisplay::onGameStartedPartThree() {
+    mLedDisplay->SetRGB(0xff, 0x00, 0x00);
+    QString name = mGameState->currentPlayerName();
+
+    mLedDisplay->DisplayString((name != NULL) ? name.toUtf8().constData() : "", LEDDisplay::kCenter, LEDDisplay::kNoScroll, LEDDisplay::kVariable);
+}
+
+void QQuizLedDisplay::onGameFinished(int rank) {
+    QString text;
+    text.sprintf("#%d", rank);
+    mLedDisplay->DisplayString(text.toUtf8().constData(), LEDDisplay::kCenter, LEDDisplay::kNoScroll, LEDDisplay::kMono);
+    //showBannerText();
 }
 
 void QQuizLedDisplay::onTimerFired(long time) {
@@ -45,7 +66,8 @@ void QQuizLedDisplay::onNewQuestion(QuizQuestion *question, int questionCount) {
 void QQuizLedDisplay::onWrongAnswer() {
     mAllowTimerUpdates = false;
     mLedDisplay->SetRGB(0xff, 0x0, 0x0);
-    QTimer::singleShot(500, this, SLOT(onWrongAnswerPartTwo()));
+    mLedDisplay->DisplayX(LEDDisplay::kDupeCenter, LEDDisplay::kNoScroll);
+    QTimer::singleShot(1000, this, SLOT(onWrongAnswerPartTwo()));
 }
 
 void QQuizLedDisplay::onCorrectAnswer() {
@@ -57,7 +79,7 @@ void QQuizLedDisplay::onCorrectAnswer() {
 
 void QQuizLedDisplay::onWrongAnswerPartTwo() {
     mLedDisplay->DisplayString("5s Penalty", LEDDisplay::kLeft, LEDDisplay::kNoScroll, LEDDisplay::kVariable);
-    QTimer::singleShot(500, this, SLOT(enableTimerUpdates()));
+    QTimer::singleShot(1000, this, SLOT(enableTimerUpdates()));
 }
 
 void QQuizLedDisplay::showBannerText() {

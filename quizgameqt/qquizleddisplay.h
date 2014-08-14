@@ -29,13 +29,16 @@ public:
 
 private slots:
     void onGameStarted();
+    void onGameCountdownStarted();
     void onNewQuestion(QuizQuestion* question, int questionCount);
-    void onGameFinished();
+    void onGameFinished(int rank);
     void onTimerFired(long time);
     void onWrongAnswer();
     void onCorrectAnswer();
     void enableTimerUpdates();
     void onWrongAnswerPartTwo();
+    void onGameStartedPartTwo();
+    void onGameStartedPartThree();
 
 private:
     void showBannerText();

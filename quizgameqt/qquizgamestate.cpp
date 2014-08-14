@@ -56,10 +56,10 @@ void QQuizGameState::finishGame() {
     mQuizTimeCounter->stop();
 
     QQuizResult result(mCurrentPlayerName, mQuizTimeCounter->elapsedTime());
-    mResults->addResult(&result);
+    int rank = mResults->addResult(&result);
 
     mInGame = false;
-    emit gameFinished();
+    emit gameFinished(rank);
 }
 
 QQuizTimeCounter* QQuizGameState::timeCounter() {
@@ -68,4 +68,13 @@ QQuizTimeCounter* QQuizGameState::timeCounter() {
 
 QQuizResults* QQuizGameState::results() {
     return mResults;
+}
+
+QString QQuizGameState::currentPlayerName() {
+    return mCurrentPlayerName;
+}
+
+void QQuizGameState::startGameCountdown(QString playerName) {
+    mCurrentPlayerName = playerName;
+    emit gameCountdownStarted();
 }

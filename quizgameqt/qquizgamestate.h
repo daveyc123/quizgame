@@ -15,17 +15,22 @@ public:
     explicit QQuizGameState(QQuizQuestions* questions, QQuizResults* results, QObject *parent = 0);
 
 signals:
+    void gameCountdownStarted();
     void gameStarted();
-    void gameFinished();
+    void gameFinished(int rank);
     void newQuestion(QuizQuestion* question, int questionCount);
     void wrongAnswer();
     void correctAnswer();
 
 public slots:
+    void startGameCountdown(QString playerName);
     void startGame(QString playerName);
     bool answerCurrentQuestion(QString answer);
     QQuizTimeCounter* timeCounter();
     QQuizResults* results();
+
+public:
+    QString currentPlayerName();
 
 private:
     void finishGame();
