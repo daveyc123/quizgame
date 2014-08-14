@@ -36,8 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "qquizbuttonthread.h"
 #include <QtDebug>
-
-#define BUILD_FOR_PI
+#include "defines.h"
 
 #ifdef BUILD_FOR_PI
 #include <stdio.h>

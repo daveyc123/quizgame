@@ -6,7 +6,10 @@
 #include <QCommandLineParser>
 #include <QtDebug>
 #include <qquizuicontroller.h>
+#include <qquizleddisplay.h>
 #include <QTime>
+
+#define BUILD_FOR_PI
 
 int main(int argc, char *argv[])
 {
@@ -36,9 +39,9 @@ int main(int argc, char *argv[])
     QQuizResults quizResults(resultsFile);
     QQuizGameState quizGameState(&quizQuestions, &quizResults);
     QQuizUIController quizUIController(&quizGameState);
+    QQuizLedDisplay quizLedDisplay(&quizGameState);
 
     QQmlApplicationEngine engine;
-    quizUIController.setQmlContext(engine.rootContext());
     engine.rootContext()->setContextProperty("controller", &quizUIController);
 
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
