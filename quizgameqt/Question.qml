@@ -101,10 +101,11 @@ Item {
 
     SoundEffect {
          id: correctAnswerSoundEffect
-         source: "file:///Users/dcummings/Downloads/beep-01a.wav"
+         source: "file:///home/pi/quizgamenfs/quizgameqt/ff-strike3.wav"
          muted: false
-         loops: SoundEffect.Infinite
+         volume: 1.0
          onPlayingChanged: {console.log("In theory I'm playing")}
+         onLoadedChanged: {console.log("I'm loaded")}
     }
 
     FontLoader {
@@ -117,6 +118,13 @@ Item {
 
     FontLoader {
         source: "timer.ttf"
+    }
+
+    Connections {
+        target: controller
+        onNewQuestionText: {
+            correctAnswerSoundEffect.play();
+        }
     }
 
 //    Audio {
