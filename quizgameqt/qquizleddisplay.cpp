@@ -34,7 +34,7 @@ void QQuizLedDisplay::onGameCountdownStarted() {
 }
 
 void QQuizLedDisplay::onGameStartedPartTwo() {
-    mLedDisplay->SetRGB(0xff, 0x33, 0x0);
+    mLedDisplay->SetRGB(0xff, 0x55, 0x0);
     mLedDisplay->DisplayString("LUCK", LEDDisplay::kCenter, LEDDisplay::kUpScroll, LEDDisplay::kVariable);
     QTimer::singleShot(1000, this, SLOT(onGameStartedPartThree()));
 }
@@ -47,10 +47,11 @@ void QQuizLedDisplay::onGameStartedPartThree() {
 }
 
 void QQuizLedDisplay::onGameFinished(int rank) {
+    mLedDisplay->SetRGB(0xff, 0xff, 0x00);
     QString text;
     text.sprintf("#%d", rank);
     mLedDisplay->DisplayString(text.toUtf8().constData(), LEDDisplay::kCenter, LEDDisplay::kNoScroll, LEDDisplay::kMono);
-    //showBannerText();
+    QTimer::singleShot(2000, this, SLOT(showBannerText()));
 }
 
 void QQuizLedDisplay::onTimerFired(long time) {
