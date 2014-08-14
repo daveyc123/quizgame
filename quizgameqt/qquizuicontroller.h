@@ -38,9 +38,6 @@ public slots:
     void shawnPressed();
     void annePressed();
 
-public:
-    void setQmlContext(QQmlContext* context);
-
 private slots:
     void onGameStarted();
     void onNewQuestion(QuizQuestion* question, int questionCount);
@@ -64,11 +61,11 @@ private:
     QString mCurrentQuestionText;
     int mCurrentQuestionCount;
     QString mTimerText;
-    QQuizButtonThread* mButtonThread;
-    QQmlContext* mQmlContext;
     QString mTopScore;
     QString mTopName;
     QString mPlayerName;
+
+    QQuizButtonThread* mButtonThread;
 };
 
 #endif // QQUIZUICONTROLLER_H

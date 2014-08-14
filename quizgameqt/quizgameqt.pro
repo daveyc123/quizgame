@@ -1,6 +1,8 @@
 TEMPLATE = app
 
 QT += qml quick widgets
+LIBS += -L../librgbmatrix -lrgbmatrix -lfreetype -lpng -lz
+INCLUDEPATH += ../librgbmatrix /usr/include/freetype2
 
 QMAKE_CXXFLAGS += -fpermissive
 
@@ -12,7 +14,8 @@ SOURCES += main.cpp \
     qquizgamestate.cpp \
     qquizresult.cpp \
     qquizresults.cpp \
-    qquizbuttonthread.cpp
+    qquizbuttonthread.cpp \
+    qquizleddisplay.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,7 +33,9 @@ HEADERS += \
     qquizgamestate.h \
     qquizresult.h \
     qquizresults.h \
-    qquizbuttonthread.h
+    qquizbuttonthread.h \
+    defines.h \
+    qquizleddisplay.h
 
 OTHER_FILES += \
     questions.json \

@@ -9,6 +9,7 @@ QQuizGameState::QQuizGameState(QQuizQuestions* questions, QQuizResults* results,
     mGameQuestions = questions;
     mResults = results;
     mQuizTimeCounter = new QQuizTimeCounter();
+    mInGame = false;
 }
 
 void QQuizGameState::startGame(QString playerName) {
@@ -22,6 +23,10 @@ void QQuizGameState::startGame(QString playerName) {
 }
 
 bool QQuizGameState::answerCurrentQuestion(QString answer) {
+    if (!mInGame) {
+        return false;
+    }
+
     bool result = true;
 
     QuizQuestion* currentQuestion = mCurrentQuestions.at(mCurrentQuestionIndex);
@@ -31,6 +36,12 @@ bool QQuizGameState::answerCurrentQuestion(QString answer) {
     }
 
     mCurrentQuestionIndex++;
+
+    if (result) {
+        emit correctAnswer();
+    } else {
+        emit wrongAnswer();
+    }
 
     if (mCurrentQuestionIndex == QUESTIONS_PER_GAME) {
         finishGame();

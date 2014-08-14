@@ -18,6 +18,8 @@ signals:
     void gameStarted();
     void gameFinished();
     void newQuestion(QuizQuestion* question, int questionCount);
+    void wrongAnswer();
+    void correctAnswer();
 
 public slots:
     void startGame(QString playerName);
