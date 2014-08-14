@@ -123,9 +123,9 @@ QString QQuizUIController::topName() {
 }
 
 void QQuizUIController::onButtonPressed(QString id) {
-    if (id.compare(id, "green") == 0) {
+    if (id.compare(id, "red") == 0) {
         annePressed();
-    } else if (id.compare(id, "red") == 0) {
+    } else if (id.compare(id, "green") == 0) {
         shawnPressed();
     }
 }

@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets multimedia
+QT += qml quick widgets
 
 QMAKE_CXXFLAGS += -fpermissive
 
