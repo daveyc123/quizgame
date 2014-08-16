@@ -1,0 +1,16 @@
+{
+    "results": [
+        {
+            "name": "This is a long player name",
+            "score": 43752
+        },
+        {
+            "name": "worst",
+            "score": 123456
+        },
+        {
+            "name": "This is a long player name",
+            "score": 43752
+        }
+    ]
+}

@@ -2,7 +2,6 @@ import QtQuick 2.2
 import QtQuick.Window 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.0
-import QtMultimedia 5.0
 
 Item {
     anchors.fill: parent
@@ -14,7 +13,7 @@ Item {
 
     Text {
         id: questionCount
-        text: qsTr("Question ") + controller.questionCount + "/10"
+        text: qsTr("Question ") + controller.questionCount + "/15"
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.leftMargin: 20
@@ -87,7 +86,6 @@ Item {
         anchors.left: parent.left
         anchors.bottomMargin: 20
         anchors.leftMargin: 20
-
     }
 
     Image {
@@ -97,15 +95,6 @@ Item {
         anchors.right: parent.right
         anchors.bottomMargin: 20
         anchors.rightMargin: 20
-    }
-
-    SoundEffect {
-         id: correctAnswerSoundEffect
-         source: "file:///home/pi/quizgamenfs/quizgameqt/ff-strike3.wav"
-         muted: false
-         volume: 1.0
-         onPlayingChanged: {console.log("In theory I'm playing")}
-         onLoadedChanged: {console.log("I'm loaded")}
     }
 
     FontLoader {
@@ -119,42 +108,5 @@ Item {
     FontLoader {
         source: "timer.ttf"
     }
-
-    Connections {
-        target: controller
-        onNewQuestionText: {
-            correctAnswerSoundEffect.play();
-        }
-    }
-
-//    Audio {
-//         id: correctAnswerSoundEffect
-//         source: "file://Users/dcummings/Downloads/ff-strike3.wav"
-//         muted: false
-//         loops: SoundEffect.Infinite
-//    }
-
-
-//    Button {
-//        text: "Reset clock"
-//        onClicked: quizTimeCounter.start()
-//        anchors.left: parent.left
-//        anchors.bottom : parent.bottom;
-//    }
-
-//    Button {
-//        text: "Stop clock"
-//        onClicked: quizTimeCounter.stop();
-//        anchors.right: parent.right;
-//        anchors.top : parent.bottom;
-//    }
-
-//    Button {
-//        text: "Stop clock"
-//        onClicked: controller.setPage("highScorePage");
-//        anchors.left: parent.left
-//        anchors.bottom : parent.bottom
-//    }
-
 
 }

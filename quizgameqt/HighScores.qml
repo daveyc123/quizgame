@@ -14,7 +14,7 @@ Item {
         id: highScoresText
         text: "Top Score: " + controller.topName + " (" + controller.topScore + "s)"
         font.bold: true
-        font.pointSize: 40
+        font.pointSize: 30
         anchors.top: parent.top
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter

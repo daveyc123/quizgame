@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets concurrent
 LIBS += -L../librgbmatrix -lrgbmatrix -lfreetype -lpng -lz
 INCLUDEPATH += ../librgbmatrix /usr/include/freetype2
 
@@ -39,6 +39,11 @@ HEADERS += \
 
 OTHER_FILES += \
     questions.json \
-    ff-strike3.wav
+    ff-strike3.wav \
+    finalquestions.json \
+    results.json \
+    worstresults.json \
+    anneQuestions.txt \
+    shawnQuestions.txt
 
 

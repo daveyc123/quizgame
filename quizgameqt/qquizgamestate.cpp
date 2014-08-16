@@ -1,8 +1,6 @@
 #include "qquizgamestate.h"
 #include <QtDebug>
 
-#define TIME_PENALTY 5000
-
 QQuizGameState::QQuizGameState(QQuizQuestions* questions, QQuizResults* results, QObject *parent) :
     QObject(parent)
 {
@@ -77,4 +75,8 @@ QString QQuizGameState::currentPlayerName() {
 void QQuizGameState::startGameCountdown(QString playerName) {
     mCurrentPlayerName = playerName;
     emit gameCountdownStarted();
+}
+
+bool QQuizGameState::inGame() {
+    return mInGame;
 }
