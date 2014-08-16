@@ -80,8 +80,8 @@ LEDDisplay::~LEDDisplay()
 
 void LEDDisplay::Run()
 {
-  unsigned i = 0;
-  unsigned j = 0;
+  int i = 0;
+  int j = 0;
   int x_offset = 0;
   bool x_scroll = false;
   bool y_scroll = false;
@@ -170,7 +170,10 @@ void LEDDisplay::Run()
         break;
     }
 
-    canvas_->Display(matrix_, x_offset + (i % canvas_->width()), (j % canvas_->width()), x_scroll, y_scroll);
+    int x_shift = (i >=0) ? (i % canvas_->width()) : -1 * (abs(i) % canvas_->width());
+
+    //printf("x_offset: %d, i: %d, abs_mod_can_width: %d, mod_can_width: %d, canvas_width: %d\n", x_offset, i, (abs(i) % canvas_->width()), (i % canvas_->width()), canvas_->width());
+    canvas_->Display(matrix_, x_offset + x_shift, (j % canvas_->width()), x_scroll, y_scroll);
 
     if (scrolling_type_ != kNoScroll) {
     	usleep(scrolling_interval_);
