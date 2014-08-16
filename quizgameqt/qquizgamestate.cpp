@@ -53,8 +53,8 @@ bool QQuizGameState::answerCurrentQuestion(QString answer) {
 void QQuizGameState::finishGame() {
     mQuizTimeCounter->stop();
 
-    QQuizResult result(mCurrentPlayerName, mQuizTimeCounter->elapsedTime());
-    int rank = mResults->addResult(&result);
+    QQuizResult* result = new QQuizResult(mCurrentPlayerName, mQuizTimeCounter->elapsedTime());
+    int rank = mResults->addResult(result);
 
     mInGame = false;
     emit gameFinished(rank);

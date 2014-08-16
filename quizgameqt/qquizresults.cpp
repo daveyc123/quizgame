@@ -64,7 +64,7 @@ int QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
                 break;
             } else if (result->score() > mResults[i]->score() && result->score() < mResults[i+1]->score()) {
                 mResults.insert(i+1, result);
-                rank = i + 1;
+                rank = i + 2;
                 break;
             }
         }

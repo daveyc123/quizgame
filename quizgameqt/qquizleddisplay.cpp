@@ -57,19 +57,20 @@ void QQuizLedDisplay::onGameFinished(int rank) {
 void QQuizLedDisplay::runCountdown() {
     displayMutex.lock();
 
-    mLedDisplay->SetRGB(0xff, 0xff, 0x00);
+    mLedDisplay->SetRGB(0xFF, 0x0, 0x0);
     mLedDisplay->DisplayString("GOOD", LEDDisplay::kCenter, LEDDisplay::kDownScroll, LEDDisplay::kVariable);
-    usleep(1000000);
+    usleep(600000);
 
-    mLedDisplay->SetRGB(0xff, 0x99, 0x0);
+
+    mLedDisplay->SetRGB(0x0, 0xFF, 0x0);
     mLedDisplay->DisplayString("LUCK", LEDDisplay::kCenter, LEDDisplay::kUpScroll, LEDDisplay::kVariable);
-    usleep(1000000);
+    usleep(600000);
 
     QString name;
-    name.sprintf("%s                                                            ", mGameState->currentPlayerName().toUpper().toUtf8().constData());
-    mLedDisplay->SetRGB(0xff, 0x0, 0x0);
-    mLedDisplay->DisplayString((name != NULL) ? name.toUtf8().constData() : "", LEDDisplay::kRight, LEDDisplay::kLeftScroll, LEDDisplay::kVariable);
-    usleep(1000000);
+    name.sprintf("                %s!", mGameState->currentPlayerName().toUtf8().constData());
+    mLedDisplay->SetRGB(0x0, 0x0, 0xFF);
+    mLedDisplay->DisplayString((name != NULL) ? name.toUtf8().constData() : "", LEDDisplay::kLeft, LEDDisplay::kLeftScroll, LEDDisplay::kVariable);
+    usleep(1800000);
 
     displayMutex.unlock();
 }
@@ -148,7 +149,7 @@ void QQuizLedDisplay::runWinner() {
 void QQuizLedDisplay::showBannerText() {
     displayMutex.lock();
     mLedDisplay->SetRGB(0x0, 0x0, 0xff);
-    mLedDisplay->DisplayString("           Play the Anne & Shawn Quiz Game!!! Only $2!!! Win a dinner and a movie night!!!", LEDDisplay::kLeft, LEDDisplay::kLeftScroll, LEDDisplay::kVariable);
+    mLedDisplay->DisplayString("                    Play the Anne & Shawn Quiz Game!!! Only $2!!! Win a dinner and a movie night!!!", LEDDisplay::kLeft, LEDDisplay::kLeftScroll, LEDDisplay::kVariable);
     displayMutex.unlock();
 }
 
