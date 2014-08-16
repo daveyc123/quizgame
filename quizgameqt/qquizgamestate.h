@@ -6,7 +6,8 @@
 #include <qquizresults.h>
 #include <qquiztimecounter.h>
 
-#define QUESTIONS_PER_GAME 10
+#define QUESTIONS_PER_GAME 15
+#define TIME_PENALTY 7000
 
 class QQuizGameState : public QObject
 {
@@ -31,6 +32,7 @@ public slots:
 
 public:
     QString currentPlayerName();
+    bool inGame();
 
 private:
     void finishGame();

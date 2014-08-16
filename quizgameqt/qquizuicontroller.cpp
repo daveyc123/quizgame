@@ -32,6 +32,14 @@ QQuizUIController::QQuizUIController(QQuizGameState *gameState, QObject *parent)
     QObject::connect(mButtonThread, &QQuizButtonThread::buttonPressed, this, &QQuizUIController::onButtonPressed);
 
     mButtonThread->start(QThread::HighPriority);
+
+    QList<QQuizResult *> results = mGameState->results()->getResults();
+    if (results.size() > 0) {
+        mTopScore.sprintf("%3.2f", ((float)results.at(0)->score())/1000.0);
+        mTopName = results.at(0)->name();
+        emit newTopScore(mTopScore);
+        emit newTopName(mTopName);
+    }
 }
 
 QQuizUIController::~QQuizUIController() {
@@ -66,7 +74,7 @@ void QQuizUIController::onGameStarted() {
 void QQuizUIController::onGameFinished(int rank) {
     QList<QQuizResult *> results = mGameState->results()->getResults();
     if (results.size() > 0) {
-        mTopScore.sprintf("%3.1f", ((float)results.at(0)->score())/1000.0);
+        mTopScore.sprintf("%3.2f", ((float)results.at(0)->score())/1000.0);
         mTopName = results.at(0)->name();
         emit newTopScore(mTopScore);
         emit newTopName(mTopName);

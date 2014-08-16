@@ -8,11 +8,14 @@
 #include <qquizuicontroller.h>
 #include <qquizleddisplay.h>
 #include <QTime>
+#include <QThreadPool>
 
 #define BUILD_FOR_PI
 
 int main(int argc, char *argv[])
 {
+    QThreadPool::globalInstance()->setMaxThreadCount(10);
+
     QApplication app(argc, argv);
 
     app.setApplicationName("quizgame");

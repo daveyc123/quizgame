@@ -4,6 +4,7 @@
 #include <QObject>
 #include "defines.h"
 #include <qquizgamestate.h>
+#include <QMutex>
 
 #ifdef BUILD_FOR_PI
 #include "thread.h"
@@ -30,22 +31,25 @@ public:
 private slots:
     void onGameStarted();
     void onGameCountdownStarted();
-    void onNewQuestion(QuizQuestion* question, int questionCount);
     void onGameFinished(int rank);
     void onTimerFired(long time);
     void onWrongAnswer();
     void onCorrectAnswer();
-    void enableTimerUpdates();
-    void onWrongAnswerPartTwo();
-    void onGameStartedPartTwo();
-    void onGameStartedPartThree();
-    void showBannerText();
 
+private:
+    void showBannerText();
+    void runCountdown();
+    void runCorrectAnswer();
+    void runWrongAnswer();
+    void runWinner();
+    void runLoser(int rank);
 
 private:
     QQuizGameState *mGameState;
     LEDDisplay* mLedDisplay;
     bool mAllowTimerUpdates;
+    int mCurrentRank;
+    QMutex displayMutex;
 
 };
 

@@ -43,6 +43,11 @@ QQuizResults::QQuizResults(QString resultsFile, QObject *parent) :
 }
 
 int QQuizResults::addResult(QQuizResult *result, bool shouldSerialize) {
+    if (result->name().compare("winner") == 0) {
+        return 1;
+    } else if (result->name().compare("loser") == 0) {
+        return 2;
+    }
     int rank = 0;
     if (mResults.size() == 0) {
         mResults.append(result);
