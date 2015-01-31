@@ -1,5 +1,5 @@
 # Ugh, need to have the freetype2 dir on the include path... add /usr/local/include/freetype2 
-FT2DIR = -I/Volumes/xtools/arm-none-linux-gnueabi/arm-none-linux-gnueabi/sysroot/usr/include/freetype2 -I/usr/local/include/freetype2
+FT2DIR = -I/usr/include/freetype2
 CXXFLAGS = -fPIC -Wall -Wextra -Wno-sign-compare -O3 -g $(FT2DIR)
 RM = rm -f
 TARGET_LIB = librgbmatrix.a

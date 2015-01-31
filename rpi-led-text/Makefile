@@ -1,4 +1,4 @@
-FT2DIR = -I/Volumes/xtools/arm-none-linux-gnueabi/arm-none-linux-gnueabi/sysroot/usr/include/freetype2 -I/usr/local/include/freetype2
+FT2DIR = -I/usr/include/freetype2
 CXXFLAGS = -Wall -Wextra -O3 -g $(FT2DIR) -L../librgbmatrix -I../librgbmatrix
 LIBS = -lrt -lm -lpthread -lrgbmatrix -lfreetype -lpng -lz
 RM = rm -f
