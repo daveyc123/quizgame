@@ -9,19 +9,23 @@ I designed this game to raise money at my brother-in-law's stag. The game presen
 ![Quiz Game] (quizgame.jpg)
 
 * [Code](#code)
-  * Setting up a dev environment
-  * Setting up the Raspberry Pi
-  * Building from source
-* Construction
-  * Parts
-  * Hardware assembly
-  * Building the cabinet
-* Configuring the game
+  * [quizgameqt](#quizgameqt)
+  * [librgbmatrix](#librgbmatrix)
+  * [rpi-led-text](#rpi-led-text)
+  * [Dev environment](#dev-environment)
+  * [Configuring the PI](#configuring-the-pi)
+* [Construction](#construction)
+  * [Parts](#parts)
+  * [Hardware assembly](#hardware-assembly)
+  * [Building the cabinet](#building-the-cabinet)
+* [Configuring the game](#configuring-the-game)
 
 ## Code
-#### Setting up a dev environment
-#### Setting up the Raspberry Pi
-#### Building from source
+#### quizgameqt
+#### librgbmatrix
+#### rpi-led-text
+#### Dev environment
+#### Configuring the PI
 ## Construction
 #### Parts
 #### Hardware assembly
