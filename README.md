@@ -8,16 +8,27 @@ I designed this game to raise money at my brother-in-law's stag. The game presen
 
 ![Quiz Game] (quizgame.jpg)
 
-## Parts
+* [Code](#code)
+  * Setting up a dev environment
+  * Setting up the Raspberry Pi
+  * Building from source
+* Construction
+  * Parts
+  * Hardware assembly
+  * Building the cabinet
+* Configuring the game
 
-## Configuring the raspberry pi
-
-
-## Building from source
-
+## Code
+#### Setting up a dev environment
+#### Setting up the Raspberry Pi
+#### Building from source
+## Construction
+#### Parts
+#### Hardware assembly
+#### Building the cabinet
 ## Configuring the game
 
-## Building the cabinet
+
 
 
 
