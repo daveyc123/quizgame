@@ -43,7 +43,26 @@ The sample program has several demos.
 * ./led-matrix 3 -> Clears the led
 
 #### Dev environment
+
+All the code was developed on OSX. For the Qt code, QtCreator ?.? was used. The code targets Qt version 5.?
+
 #### Configuring the PI
+
+All these instructions were executed in August of 2014. YMMV. We were using a Model B (rev 2) board.
+
+##### Setting up the OS
+I ended up using the noobs setup guide to get an SD card flashed with raspbian os
+* See http://www.raspberrypi.org/help/noobs-setup/
+* Used sdformatter 4.0 (osx) to format the SD card
+* During the setup selected the raspbian os
+* After setup, used the configuration tool that comes up to enable ssh
+* Installed vim (sudo apt-get install vim)
+* updated my keyboard layout so that the pipe character worked!
+  * sudo vi /etc/default/keyboard
+  * switch XKBLAYOUT=”gb” to XKBLAYOUT=”us”
+
+#### Installng Qt
+
 ## Construction
 #### Parts
 #### Hardware assembly
