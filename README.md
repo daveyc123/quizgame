@@ -6,6 +6,8 @@ Quizgame is Raspberry-Pi based application that presents several two-answer ques
 
 I designed this game to raise money at my brother-in-law's stag. The game presented questions in which the answer was either him or my soon to be sister-in-law.
 
+![Quiz Game] (quizgame.jpg)
+
 ## Parts
 
 ## Configuring the raspberry pi
