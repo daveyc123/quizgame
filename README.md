@@ -61,7 +61,23 @@ I ended up using the noobs setup guide to get an SD card flashed with raspbian o
   * sudo vi /etc/default/keyboard
   * switch XKBLAYOUT=”gb” to XKBLAYOUT=”us”
 
-#### Installng Qt
+#### Installing Qt
+
+You have a few options for getting Qt running on your PI. Building from source is one option. At the time, I didn't find any great cross-compiling instructions (although it seems like this new [guide](http://qt-project.org/wiki/RaspberryPi_Beginners_guide) would have been handy). Fortunately there are also some prebuilt packages published at twolife.be
+
+* On your PI, add the twolife.be repo
+  * deb http://twolife.be/raspbian/ wheezy main backports
+  * deb-src http://twolife.be/raspbian/ wheezy main backports
+	 * sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key 2578B775
+	 * sudo apt-get update
+	 * sudo apt-get upgrade
+* Install Qt
+  * sudo apt-get install qtdeclarative5-dev libqt5webkit5 libgles2-mesa-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-quicklayouts-plugin qtdeclarative5-controls-plugin qtdeclarative5-window-plugin
+* Verify the installation with a sample Qt app
+  * git clone https://git.gitorious.org/qt5-raspberrypi-example/qt5-raspberrypi-example.git
+  * make
+  * qmake
+  * ./helloworld -platform eglfs (the eglfs gets around the windowing problems)
 
 ## Construction
 #### Parts
