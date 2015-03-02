@@ -44,7 +44,7 @@ The sample program has several demos.
 
 #### Dev environment
 
-All the code was developed on OSX. For the Qt code, QtCreator ?.? was used. The code targets Qt version 5.?
+All the code was developed on OSX. For the Qt code, QtCreator 3.1.2 was used. The code targets Qt version 5.2
 
 #### Configuring the PI
 
@@ -81,8 +81,26 @@ You have a few options for getting Qt running on your PI. Building from source i
 
 ## Construction
 #### Parts
+
+In order to build the game, you'll need the following parts:
+* (2) [Medium 16x32 RGB LED matrix panel](http://www.adafruit.com/products/420)
+* (1) LCD monitor with HDMI input (or DVI/VGA with HDMI to DVI/VGA adapter)
+* (1) [Half size Breadboard](http://www.adafruit.com/products/64)
+* (1) [5V 4A (4000mA) switching power supply](http://www.adafruit.com/products/1466)
+* (1) [Female DC Power adapter - 2.1mm jack to screw terminal block](http://www.adafruit.com/products/368)
+* (2) [Large Arcade Button with LED - 60mm Red/Green](http://www.adafruit.com/products/1190)
+* (1) [Raspberry Pi Model B](http://www.adafruit.com/products/998)
+* (1) [74AHCT125 - Quad Level-Shifter (3V to 5V)](http://www.adafruit.com/products/1787)
+* Female/Female and Male/Male Jumper wires
+
 #### Hardware assembly
+
+todo
+
 #### Building the cabinet
+
+The cabinet was built using two 4'x8' sheets of 1/2" MDF. The pictures below show the different pieces that were cut out to make the cabinet. It was assembled using wood glue and a brad nailer. Once assembled, I did one quick sand to smooth out the cut edges and to round out the corners. I then applied Bondo (which works great on MDF) to all of the joints and imperfections, after which I did another sanding. A coat of primer was applied and then several coats of black paint. Finally all of the hardware was installed. The arcade buttons have a screw mechanism which makes them easy to install. For the LED panels, I used machine screws through a panel mounted inside the back of the cabinet. For the LCD monitor, I also used a panel on the inside of the cabinet and some machine screws which were tied into the VESA mounting screws of the LCD. For the Raspberry PI, I purchased some hex spacers and machine screws which allowed me to mount the PI on the inside of the cabinet.
+
 ## Configuring the game
 
 
