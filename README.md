@@ -100,7 +100,7 @@ The questions are stored in json format under questions.json
 The highscores are stored in json format under highscores.json
 
 #### Starting the game
-./qtquizgame -platform eglfs
+./qtquizgame -platform eglfs -r <path to high scores json> -q <path to questions json>
 
 
 
