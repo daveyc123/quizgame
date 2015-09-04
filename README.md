@@ -6,19 +6,9 @@ Quizgame is Raspberry-Pi based application that presents several two-answer ques
 
 I designed this game to raise money at my brother-in-law's stag. The game presented questions in which the answer was either him or my soon to be sister-in-law.
 
-![Quiz Game] (quizgame.jpg)
+# [Watch the game in action on YouTube!](https://www.youtube.com/watch?v=bzoEmVioPfQ)
 
-* [Code](#code)
-  * [quizgameqt](#quizgameqt)
-  * [librgbmatrix](#librgbmatrix)
-  * [rpi-led-text](#rpi-led-text)
-  * [Dev environment](#dev-environment)
-  * [Configuring the PI](#configuring-the-pi)
-* [Construction](#construction)
-  * [Parts](#parts)
-  * [Hardware assembly](#hardware-assembly)
-  * [Building the cabinet](#building-the-cabinet)
-* [Configuring the game](#configuring-the-game)
+![Quiz Game] (quizgame.jpg)
 
 ## Code
 
@@ -93,15 +83,24 @@ In order to build the game, you'll need the following parts:
 * (1) [74AHCT125 - Quad Level-Shifter (3V to 5V)](http://www.adafruit.com/products/1787)
 * Female/Female and Male/Male Jumper wires
 
-#### Hardware assembly
-
-todo
-
 #### Building the cabinet
 
 The cabinet was built using two 4'x8' sheets of 1/2" MDF. The pictures below show the different pieces that were cut out to make the cabinet. It was assembled using wood glue and a brad nailer. Once assembled, I did one quick sand to smooth out the cut edges and to round out the corners. I then applied Bondo (which works great on MDF) to all of the joints and imperfections, after which I did another sanding. A coat of primer was applied and then several coats of black paint. Finally all of the hardware was installed. The arcade buttons have a screw mechanism which makes them easy to install. For the LED panels, I used machine screws through a panel mounted inside the back of the cabinet. For the LCD monitor, I also used a panel on the inside of the cabinet and some machine screws which were tied into the VESA mounting screws of the LCD. For the Raspberry PI, I purchased some hex spacers and machine screws which allowed me to mount the PI on the inside of the cabinet.
 
 ## Configuring the game
+
+#### Building the game
+* make
+* qmake
+
+#### Setting the questions
+The questions are stored in json format under questions.json
+
+#### Resetting the high scores
+The highscores are stored in json format under highscores.json
+
+#### Starting the game
+./qtquizgame -platform eglfs
 
 
 
